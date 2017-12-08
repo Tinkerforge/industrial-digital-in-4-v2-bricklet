@@ -29,6 +29,7 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
+LIBS:industrial-di4-cache
 EELAYER 25 0
 EELAYER END
 $Descr A4 11693 8268
@@ -764,8 +765,6 @@ Wire Wire Line
 	4200 1650 4300 1650
 Wire Wire Line
 	4300 1550 4200 1550
-Text Notes 6550 2200 0    39   ~ 0
-SPI Slave/CH0\nP0.9 : USIC0_CH1-DX2B : SEL\nP0.8 : USIC0_CH1-DX1B : CLK\nP0.7 : USIC0_CH1-DX0D : MOSI\nP0.6 : USIC0_CH1-DOUT0 : MISO
 Wire Wire Line
 	1600 6000 1850 6000
 Text GLabel 2500 5400 2    60   Input ~ 0
