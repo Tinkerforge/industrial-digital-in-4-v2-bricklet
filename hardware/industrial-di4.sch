@@ -36,16 +36,16 @@ $Descr A4 11693 8268
 encoding utf-8
 Sheet 1 1
 Title "Industrial Digital In 4 2.0"
-Date "2017-12-08"
+Date "2018-02-07"
 Rev "2.0"
 Comp "Tinkerforge GmbH"
 Comment1 "Licensed under CERN OHL v.1.1"
-Comment2 "Copyright (©) 2017, B.Nordmeyer <bastian@tinkerforge.com>"
+Comment2 "Copyright (©) 2018, B.Nordmeyer <bastian@tinkerforge.com>"
 Comment3 ""
 Comment4 ""
 $EndDescr
 Text Notes 650  7650 0    60   ~ 0
-Copyright Tinkerforge GmbH 2017.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions\n
+Copyright Tinkerforge GmbH 2018.\nThis documentation describes Open Hardware and is licensed under the\nCERN OHL v. 1.1.\nYou may redistribute and modify this documentation under the terms of the\nCERN OHL v.1.1. (http://ohwr.org/cernohl). This documentation is distributed\nWITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF\nMERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A\nPARTICULAR PURPOSE. Please see the CERN OHL v.1.1 for applicable\nconditions\n
 $Comp
 L DRILL U4
 U 1 1 5006691C
@@ -329,7 +329,7 @@ F 1 "82" H 2350 2700 40  0000 C CNN
 F 2 "4X0402" H 2350 2750 60  0001 C CNN
 F 3 "" H 2350 2750 60  0001 C CNN
 	1    2350 2750
-	-1   0    0    -1  
+	1    0    0    -1  
 $EndComp
 $Comp
 L C C2
@@ -455,12 +455,12 @@ INPUT4
 $Comp
 L CONN_01X01 P2
 U 1 1 5A2A7018
-P 4000 4200
-F 0 "P2" H 4000 4300 50  0000 C CNN
-F 1 "DEBUG" V 4100 4200 50  0000 C CNN
-F 2 "kicad-libraries:DEBUG_PAD" H 4000 4200 50  0001 C CNN
-F 3 "" H 4000 4200 50  0000 C CNN
-	1    4000 4200
+P 3900 1650
+F 0 "P2" H 3900 1750 50  0000 C CNN
+F 1 "DEBUG" V 4000 1650 50  0000 C CNN
+F 2 "kicad-libraries:DEBUG_PAD" H 3900 1650 50  0001 C CNN
+F 3 "" H 3900 1650 50  0000 C CNN
+	1    3900 1650
 	-1   0    0    -1  
 $EndComp
 $Comp
@@ -576,18 +576,18 @@ Text GLabel 2650 2600 2    60   Output ~ 0
 S-MOSI
 Text GLabel 2650 2700 2    60   Input ~ 0
 S-MISO
-Text GLabel 4200 1850 0    60   Input ~ 0
+Text GLabel 4200 2050 0    60   Input ~ 0
 S-CS
-Text GLabel 4200 1750 0    60   Input ~ 0
+Text GLabel 4200 2150 0    60   Input ~ 0
 S-CLK
-Text GLabel 4200 1650 0    60   Input ~ 0
+Text GLabel 4200 2250 0    60   Input ~ 0
 S-MOSI
-Text GLabel 4200 1550 0    60   Output ~ 0
+Text GLabel 4200 4200 0    60   Output ~ 0
 S-MISO
 Wire Wire Line
 	4200 4200 4300 4200
 Text Notes 5200 2250 0    39   ~ 0
-SPI Slave/CH0\nP0.9 : USIC0_CH1-DX2B : SEL\nP0.8 : USIC0_CH1-DX1B : CLK\nP0.7 : USIC0_CH1-DX0D : MOSI\nP0.6 : USIC0_CH1-DOUT0 : MISO
+SPI Slave/CH0\nP0.13 : USIC0_CH0-DX2F : SEL\nP0.14 : USIC0_CH0-DX1A : CLK\nP0.15 : USIC0_CH0-DX0B : MOSI\nP2.0 : USIC0_CH0-DOUT0 : MISO
 Wire Wire Line
 	3100 1900 3100 1950
 Wire Wire Line
@@ -758,14 +758,6 @@ $EndComp
 Wire Wire Line
 	1400 2900 1400 2850
 Wire Wire Line
-	4200 1850 4300 1850
-Wire Wire Line
-	4300 1750 4200 1750
-Wire Wire Line
-	4200 1650 4300 1650
-Wire Wire Line
-	4300 1550 4200 1550
-Wire Wire Line
 	1600 6000 1850 6000
 Text GLabel 2500 5400 2    60   Input ~ 0
 LED0
@@ -803,11 +795,16 @@ Wire Wire Line
 	1150 6000 1200 6000
 Wire Wire Line
 	4100 1950 4300 1950
-NoConn ~ 4300 2050
-NoConn ~ 4300 2150
-NoConn ~ 4300 2250
 NoConn ~ 4300 3300
 NoConn ~ 4300 3400
 NoConn ~ 4300 4300
 NoConn ~ 4300 4900
+Wire Wire Line
+	4200 2050 4300 2050
+Wire Wire Line
+	4300 2150 4200 2150
+Wire Wire Line
+	4200 2250 4300 2250
+Wire Wire Line
+	4100 1650 4300 1650
 $EndSCHEMATC
