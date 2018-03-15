@@ -192,11 +192,11 @@
   )
 
   (module kicad-libraries:WEEE_7mm (layer Back) (tedit 5922FFAE) (tstamp 50F6E7FD)
-    (at 125.8 58.05 270)
-    (fp_text reference VAL (at 0 0 270) (layer B.SilkS) hide
+    (at 117.8 58.05 90)
+    (fp_text reference VAL (at 0 0 90) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
-    (fp_text value WEEE_7mm (at 0.75 0 270) (layer B.SilkS) hide
+    (fp_text value WEEE_7mm (at 0.75 0 90) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
     (fp_poly (pts (xy 2.032 -3.527778) (xy -0.014111 -3.527778) (xy -2.060222 -3.527778) (xy -2.060222 -3.019778)
@@ -317,11 +317,11 @@
   )
 
   (module kicad-libraries:CE_5mm (layer Back) (tedit 5922FFD4) (tstamp 50F56B61)
-    (at 109.8 58.05 270)
-    (fp_text reference VAL (at 0 0 270) (layer B.SilkS) hide
+    (at 107.8 58.05 90)
+    (fp_text reference VAL (at 0 0 90) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
-    (fp_text value CE_5mm (at 0 0 270) (layer B.SilkS) hide
+    (fp_text value CE_5mm (at 0 0 90) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
     (fp_poly (pts (xy -0.55372 -1.67132) (xy -0.5715 -1.67386) (xy -0.57912 -1.6764) (xy -0.59436 -1.6764)
@@ -6711,11 +6711,11 @@
   )
 
   (module kicad-libraries:Logo_CoMCU (layer Back) (tedit 0) (tstamp 5A2A9C33)
-    (at 117.8 58.05 270)
-    (fp_text reference G*** (at 0 0 270) (layer B.SilkS) hide
+    (at 127.8 58.05 90)
+    (fp_text reference G*** (at 0 0 90) (layer B.SilkS) hide
       (effects (font (thickness 0.3)) (justify mirror))
     )
-    (fp_text value LOGO (at 0.75 0 270) (layer B.SilkS) hide
+    (fp_text value LOGO (at 0.75 0 90) (layer B.SilkS) hide
       (effects (font (thickness 0.3)) (justify mirror))
     )
     (fp_poly (pts (xy -1.083326 -1.807455) (xy -1.021749 -1.855631) (xy -0.996708 -1.88908) (xy -0.98448 -1.910311)
