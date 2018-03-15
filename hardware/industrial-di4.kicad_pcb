@@ -24,7 +24,7 @@
 
   (layers
     (0 Front signal)
-    (31 Back signal)
+    (31 Back signal hide)
     (32 B.Adhes user)
     (33 F.Adhes user)
     (34 B.Paste user)
@@ -192,11 +192,11 @@
   )
 
   (module kicad-libraries:WEEE_7mm (layer Back) (tedit 5922FFAE) (tstamp 50F6E7FD)
-    (at 124.8 58.05 90)
-    (fp_text reference VAL (at 0 0 90) (layer B.SilkS) hide
+    (at 125.8 58.05 270)
+    (fp_text reference VAL (at 0 0 270) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
-    (fp_text value WEEE_7mm (at 0.75 0 90) (layer B.SilkS) hide
+    (fp_text value WEEE_7mm (at 0.75 0 270) (layer B.SilkS) hide
       (effects (font (size 0.2 0.2) (thickness 0.05)) (justify mirror))
     )
     (fp_poly (pts (xy 2.032 -3.527778) (xy -0.014111 -3.527778) (xy -2.060222 -3.527778) (xy -2.060222 -3.019778)
