@@ -42,8 +42,8 @@ typedef struct {
 	uint8_t pin;
 	uint8_t config;
 	XMC_GPIO_PORT_t *port_base;
-	LEDFlickerState info_led_flicker_state;
-} INFO_LED_CONFIG_t;
+	LEDFlickerState channel_led_flicker_state;
+} CHANNEL_LED_CONFIG_t;
 
 typedef struct {
 	uint32_t period;
@@ -84,7 +84,7 @@ typedef struct {
 
 typedef struct {
 	CH_IN_t channels[NUMBER_OF_CHANNELS];
-	INFO_LED_CONFIG_t info_leds[NUMBER_OF_CHANNELS];
+	CHANNEL_LED_CONFIG_t channel_leds[NUMBER_OF_CHANNELS];
 
 	// Input value change callback
 	Ringbuffer input_value_cb_rb;

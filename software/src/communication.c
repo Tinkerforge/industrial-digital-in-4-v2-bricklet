@@ -38,8 +38,8 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_EDGE_COUNT: return get_edge_count(message, response);
 		case FID_SET_EDGE_COUNT_CONFIGURATION: return set_edge_count_configuration(message);
 		case FID_GET_EDGE_COUNT_CONFIGURATION: return get_edge_count_configuration(message, response);
-		case FID_SET_INFO_LED_CONFIG: return set_info_led_config(message);
-		case FID_GET_INFO_LED_CONFIG: return get_info_led_config(message, response);
+		case FID_SET_CHANNEL_LED_CONFIG: return set_channel_led_config(message);
+		case FID_GET_CHANNEL_LED_CONFIG: return get_channel_led_config(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -207,28 +207,28 @@ BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountC
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-BootloaderHandleMessageResponse set_info_led_config(const SetInfoLEDConfig *data) {
+BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig *data) {
 	logd("[+] IDI4-V2: set_edge_count_configuration()\n\r");
 
 	if(data->led > NUMBER_OF_CHANNELS - 1) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	idi4.info_leds[data->led].config = data->config;
+	idi4.channel_leds[data->led].config = data->config;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
-BootloaderHandleMessageResponse get_info_led_config(const GetInfoLEDConfig *data, GetInfoLEDConfig_Response *response) {
-	logd("[+] IDI4-V2: get_info_led_config()\n\r");
+BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response) {
+	logd("[+] IDI4-V2: get_channel_led_config()\n\r");
 
-	response->header.length = sizeof(GetInfoLEDConfig_Response);
+	response->header.length = sizeof(GetChannelLEDConfig_Response);
 
 	if(data->led > NUMBER_OF_CHANNELS - 1) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	response->config = idi4.info_leds[data->led].config;
+	response->config = idi4.channel_leds[data->led].config;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

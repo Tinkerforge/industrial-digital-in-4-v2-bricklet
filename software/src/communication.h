@@ -38,10 +38,10 @@ void communication_init(void);
 #define INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_FALLING 1
 #define INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_BOTH 2
 
-#define INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_OFF 0
-#define INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_ON 1
-#define INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_SHOW_HEARTBEAT 2
-#define INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_SHOW_CHANNEL_STATUS 3
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_OFF 0
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_ON 1
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_HEARTBEAT 2
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_CHANNEL_STATUS 3
 
 #define INDUSTRIAL_DIGITAL_IN_4_V2_BOOTLOADER_MODE_BOOTLOADER 0
 #define INDUSTRIAL_DIGITAL_IN_4_V2_BOOTLOADER_MODE_FIRMWARE 1
@@ -71,8 +71,8 @@ void communication_init(void);
 #define FID_GET_EDGE_COUNT 7
 #define FID_SET_EDGE_COUNT_CONFIGURATION 8
 #define FID_GET_EDGE_COUNT_CONFIGURATION 9
-#define FID_SET_INFO_LED_CONFIG 10
-#define FID_GET_INFO_LED_CONFIG 11
+#define FID_SET_CHANNEL_LED_CONFIG 10
+#define FID_GET_CHANNEL_LED_CONFIG 11
 
 #define FID_CALLBACK_INPUT_VALUE 12
 #define FID_CALLBACK_ALL_INPUT_VALUE 13
@@ -163,17 +163,17 @@ typedef struct {
 	TFPMessageHeader header;
 	uint8_t led;
 	uint8_t config;
-} __attribute__((__packed__)) SetInfoLEDConfig;
+} __attribute__((__packed__)) SetChannelLEDConfig;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint8_t led;
-} __attribute__((__packed__)) GetInfoLEDConfig;
+} __attribute__((__packed__)) GetChannelLEDConfig;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint8_t config;
-} __attribute__((__packed__)) GetInfoLEDConfig_Response;
+} __attribute__((__packed__)) GetChannelLEDConfig_Response;
 
 typedef struct {
 	TFPMessageHeader header;
@@ -198,8 +198,8 @@ BootloaderHandleMessageResponse get_all_input_value_callback_configuration(const
 BootloaderHandleMessageResponse get_edge_count(const GetEdgeCount *data, GetEdgeCount_Response *response);
 BootloaderHandleMessageResponse set_edge_count_configuration(const SetEdgeCountConfiguration *data);
 BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountConfiguration *data, GetEdgeCountConfiguration_Response *response);
-BootloaderHandleMessageResponse set_info_led_config(const SetInfoLEDConfig *data);
-BootloaderHandleMessageResponse get_info_led_config(const GetInfoLEDConfig *data, GetInfoLEDConfig_Response *response);
+BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig *data);
+BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response);
 
 // Callbacks
 bool handle_input_value_callback(void);

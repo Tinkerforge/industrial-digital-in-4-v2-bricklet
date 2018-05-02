@@ -40,9 +40,9 @@ void idi4_init() {
 				// Channel input 0: P2_2
 				idi4.channels[i].pin = 2;
 
-				// Info LED 0: P0_5
-				idi4.info_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT0_BASE;
-				idi4.info_leds[i].pin = 5;
+				// Channel LED 0: P0_5
+				idi4.channel_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT0_BASE;
+				idi4.channel_leds[i].pin = 5;
 
 				break;
 
@@ -50,9 +50,9 @@ void idi4_init() {
 				// P2_6
 				idi4.channels[i].pin = 6;
 
-				// Info LED 1: P0_0
-				idi4.info_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT0_BASE;
-				idi4.info_leds[i].pin = 0;
+				// Channel LED 1: P0_0
+				idi4.channel_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT0_BASE;
+				idi4.channel_leds[i].pin = 0;
 
 				break;
 
@@ -60,9 +60,9 @@ void idi4_init() {
 				// P2_7
 				idi4.channels[i].pin = 7;
 
-				// Info LED 2: P1_0
-				idi4.info_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT1_BASE;
-				idi4.info_leds[i].pin = 0;
+				// Channel LED 2: P1_0
+				idi4.channel_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT1_BASE;
+				idi4.channel_leds[i].pin = 0;
 
 				break;
 
@@ -70,9 +70,9 @@ void idi4_init() {
 				// P2_9
 				idi4.channels[i].pin = 9;
 
-				// Info LED 3: P1_1
-				idi4.info_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT1_BASE;
-				idi4.info_leds[i].pin = 1;
+				// Channel LED 3: P1_1
+				idi4.channel_leds[i].port_base = (XMC_GPIO_PORT_t *)PORT1_BASE;
+				idi4.channel_leds[i].pin = 1;
 
 				break;
 
@@ -99,23 +99,23 @@ void idi4_init() {
 		// Store initial channel value
 		idi4.channels[i].value = !((bool)XMC_GPIO_GetInput(idi4.channels[i].port_base, idi4.channels[i].pin));
 
-		// Info LED init
-		idi4.info_leds[i].info_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
-		idi4.info_leds[i].config = INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_SHOW_CHANNEL_STATUS;
+		// Channel LED init
+		idi4.channel_leds[i].channel_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
+		idi4.channel_leds[i].config = INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_CHANNEL_STATUS;
 
 		if(idi4.channels[i].value) {
 			// Input channel has logic high
-			gpio_config.output_level = XMC_GPIO_OUTPUT_LEVEL_LOW; // Info LED on
+			gpio_config.output_level = XMC_GPIO_OUTPUT_LEVEL_LOW; // Channel LED on
 		}
 		else {
 			// Input channel has logic low
-			gpio_config.output_level = XMC_GPIO_OUTPUT_LEVEL_HIGH; // Info LED off
+			gpio_config.output_level = XMC_GPIO_OUTPUT_LEVEL_HIGH; // Channel LED off
 		}
 
 		gpio_config.mode = XMC_GPIO_MODE_OUTPUT_PUSH_PULL;
 
-		XMC_GPIO_Init(idi4.info_leds[i].port_base,
-					  idi4.info_leds[i].pin,
+		XMC_GPIO_Init(idi4.channel_leds[i].port_base,
+					  idi4.channel_leds[i].pin,
 					  &gpio_config);
 		
 		// Edge count init
@@ -243,39 +243,39 @@ void idi4_tick(void) {
 			idi4.channels[i].edge_count.debounce_start = system_timer_get_ms();
 		}
 
-		// Manage info LEDs
-		switch (idi4.info_leds[i].config) {
-			case INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_OFF:
-				idi4.info_leds[i].info_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
-				XMC_GPIO_SetOutputHigh(idi4.info_leds[i].port_base, idi4.info_leds[i].pin); // Info LED off
+		// Manage channel LEDs
+		switch (idi4.channel_leds[i].config) {
+			case INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_OFF:
+				idi4.channel_leds[i].channel_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
+				XMC_GPIO_SetOutputHigh(idi4.channel_leds[i].port_base, idi4.channel_leds[i].pin); // Channel LED off
 
 				break;
 
-			case INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_ON:
-				idi4.info_leds[i].info_led_flicker_state.config = LED_FLICKER_CONFIG_ON;
-				XMC_GPIO_SetOutputLow(idi4.info_leds[i].port_base, idi4.info_leds[i].pin); // Info LED on
+			case INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_ON:
+				idi4.channel_leds[i].channel_led_flicker_state.config = LED_FLICKER_CONFIG_ON;
+				XMC_GPIO_SetOutputLow(idi4.channel_leds[i].port_base, idi4.channel_leds[i].pin); // Channel LED on
 
 				break;
 
-			case INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_SHOW_HEARTBEAT:
-				idi4.info_leds[i].info_led_flicker_state.config = LED_FLICKER_CONFIG_HEARTBEAT;
-				led_flicker_tick(&idi4.info_leds[i].info_led_flicker_state,
+			case INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_HEARTBEAT:
+				idi4.channel_leds[i].channel_led_flicker_state.config = LED_FLICKER_CONFIG_HEARTBEAT;
+				led_flicker_tick(&idi4.channel_leds[i].channel_led_flicker_state,
 				                 system_timer_get_ms(),
-				                 idi4.info_leds[i].port_base,
-				                 idi4.info_leds[i].pin);
+				                 idi4.channel_leds[i].port_base,
+				                 idi4.channel_leds[i].pin);
 
 				break;
 
-			case INDUSTRIAL_DIGITAL_IN_4_V2_INFO_LED_CONFIG_SHOW_CHANNEL_STATUS:
-				idi4.info_leds[i].info_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
+			case INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_CHANNEL_STATUS:
+				idi4.channel_leds[i].channel_led_flicker_state.config = LED_FLICKER_CONFIG_OFF;
 
 				if(idi4.channels[i].value) {
 					// Input channel has logic high
-					XMC_GPIO_SetOutputLow(idi4.info_leds[i].port_base, idi4.info_leds[i].pin); // Info LED on
+					XMC_GPIO_SetOutputLow(idi4.channel_leds[i].port_base, idi4.channel_leds[i].pin); // Channel LED on
 				}
 				else {
 					// Input channel has logic low
-					XMC_GPIO_SetOutputHigh(idi4.info_leds[i].port_base, idi4.info_leds[i].pin); // Info LED off
+					XMC_GPIO_SetOutputHigh(idi4.channel_leds[i].port_base, idi4.channel_leds[i].pin); // Channel LED off
 				}
 
 				break;
