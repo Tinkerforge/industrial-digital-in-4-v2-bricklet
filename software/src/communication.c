@@ -30,7 +30,6 @@
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	switch(tfp_get_fid_from_message(message)) {
 		case FID_GET_VALUE: return get_value(message, response);
-		case FID_GET_SELECTED_VALUE: return get_selected_value(message, response);
 		case FID_SET_VALUE_CALLBACK_CONFIGURATION: return set_value_callback_configuration(message);
 		case FID_GET_VALUE_CALLBACK_CONFIGURATION: return get_value_callback_configuration(message, response);
 		case FID_SET_ALL_VALUE_CALLBACK_CONFIGURATION: return set_all_value_callback_configuration(message);
@@ -60,20 +59,6 @@ BootloaderHandleMessageResponse get_value(const GetValue *data, GetValue_Respons
 	}
 
 	response->value = bit_encoded_values;
-
-	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
-}
-
-BootloaderHandleMessageResponse get_selected_value(const GetSelectedValue *data, GetSelectedValue_Response *response) {
-	logd("[+] IDI4-V2: get_selected_value()\n\r");
-
-	response->header.length = sizeof(GetSelectedValue_Response);
-
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
-		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}
-
-	response->value = idi4.channels[data->channel].value;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }

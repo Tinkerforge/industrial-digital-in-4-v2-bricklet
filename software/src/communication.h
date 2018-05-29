@@ -63,19 +63,18 @@ void communication_init(void);
 
 // Function and callback IDs and structs
 #define FID_GET_VALUE 1
-#define FID_GET_SELECTED_VALUE 2
-#define FID_SET_VALUE_CALLBACK_CONFIGURATION 3
-#define FID_GET_VALUE_CALLBACK_CONFIGURATION 4
-#define FID_SET_ALL_VALUE_CALLBACK_CONFIGURATION 5
-#define FID_GET_ALL_VALUE_CALLBACK_CONFIGURATION 6
-#define FID_GET_EDGE_COUNT 7
-#define FID_SET_EDGE_COUNT_CONFIGURATION 8
-#define FID_GET_EDGE_COUNT_CONFIGURATION 9
-#define FID_SET_CHANNEL_LED_CONFIG 10
-#define FID_GET_CHANNEL_LED_CONFIG 11
+#define FID_SET_VALUE_CALLBACK_CONFIGURATION 2
+#define FID_GET_VALUE_CALLBACK_CONFIGURATION 3
+#define FID_SET_ALL_VALUE_CALLBACK_CONFIGURATION 4
+#define FID_GET_ALL_VALUE_CALLBACK_CONFIGURATION 5
+#define FID_GET_EDGE_COUNT 6
+#define FID_SET_EDGE_COUNT_CONFIGURATION 7
+#define FID_GET_EDGE_COUNT_CONFIGURATION 8
+#define FID_SET_CHANNEL_LED_CONFIG 9
+#define FID_GET_CHANNEL_LED_CONFIG 10
 
-#define FID_CALLBACK_VALUE 12
-#define FID_CALLBACK_ALL_VALUE 13
+#define FID_CALLBACK_VALUE 11
+#define FID_CALLBACK_ALL_VALUE 12
 
 typedef struct {
 	TFPMessageHeader header;
@@ -85,16 +84,6 @@ typedef struct {
 	TFPMessageHeader header;
 	uint8_t value;
 } __attribute__((__packed__)) GetValue_Response;
-
-typedef struct {
-	TFPMessageHeader header;
-	uint8_t channel;
-} __attribute__((__packed__)) GetSelectedValue;
-
-typedef struct {
-	TFPMessageHeader header;
-	bool value;
-} __attribute__((__packed__)) GetSelectedValue_Response;
 
 typedef struct {
 	TFPMessageHeader header;
@@ -190,7 +179,6 @@ typedef struct {
 
 // Function prototypes
 BootloaderHandleMessageResponse get_value(const GetValue *data, GetValue_Response *response);
-BootloaderHandleMessageResponse get_selected_value(const GetSelectedValue *data, GetSelectedValue_Response *response);
 BootloaderHandleMessageResponse set_value_callback_configuration(const SetValueCallbackConfiguration *data);
 BootloaderHandleMessageResponse get_value_callback_configuration(const GetValueCallbackConfiguration *data, GetValueCallbackConfiguration_Response *response);
 BootloaderHandleMessageResponse set_all_value_callback_configuration(const SetAllValueCallbackConfiguration *data);
