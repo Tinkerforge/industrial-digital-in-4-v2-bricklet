@@ -64,18 +64,18 @@ void communication_init(void);
 // Function and callback IDs and structs
 #define FID_GET_VALUE 1
 #define FID_GET_SELECTED_VALUE 2
-#define FID_SET_INPUT_VALUE_CALLBACK_CONFIGURATION 3
-#define FID_GET_INPUT_VALUE_CALLBACK_CONFIGURATION 4
-#define FID_SET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION 5
-#define FID_GET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION 6
+#define FID_SET_VALUE_CALLBACK_CONFIGURATION 3
+#define FID_GET_VALUE_CALLBACK_CONFIGURATION 4
+#define FID_SET_ALL_VALUE_CALLBACK_CONFIGURATION 5
+#define FID_GET_ALL_VALUE_CALLBACK_CONFIGURATION 6
 #define FID_GET_EDGE_COUNT 7
 #define FID_SET_EDGE_COUNT_CONFIGURATION 8
 #define FID_GET_EDGE_COUNT_CONFIGURATION 9
 #define FID_SET_CHANNEL_LED_CONFIG 10
 #define FID_GET_CHANNEL_LED_CONFIG 11
 
-#define FID_CALLBACK_INPUT_VALUE 12
-#define FID_CALLBACK_ALL_INPUT_VALUE 13
+#define FID_CALLBACK_VALUE 12
+#define FID_CALLBACK_ALL_VALUE 13
 
 typedef struct {
 	TFPMessageHeader header;
@@ -101,34 +101,34 @@ typedef struct {
 	uint8_t channel;
 	uint32_t period;
 	bool value_has_to_change;
-} __attribute__((__packed__)) SetInputValueCallbackConfiguration;
+} __attribute__((__packed__)) SetValueCallbackConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint8_t channel;
-} __attribute__((__packed__)) GetInputValueCallbackConfiguration;
+} __attribute__((__packed__)) GetValueCallbackConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint32_t period;
 	bool value_has_to_change;
-} __attribute__((__packed__)) GetInputValueCallbackConfiguration_Response;
+} __attribute__((__packed__)) GetValueCallbackConfiguration_Response;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint32_t period;
 	bool value_has_to_change;
-} __attribute__((__packed__)) SetAllInputValueCallbackConfiguration;
+} __attribute__((__packed__)) SetAllValueCallbackConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
-} __attribute__((__packed__)) GetAllInputValueCallbackConfiguration;
+} __attribute__((__packed__)) GetAllValueCallbackConfiguration;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint32_t period;
 	bool value_has_to_change;
-} __attribute__((__packed__)) GetAllInputValueCallbackConfiguration_Response;
+} __attribute__((__packed__)) GetAllValueCallbackConfiguration_Response;
 
 typedef struct {
 	TFPMessageHeader header;
@@ -180,21 +180,21 @@ typedef struct {
 	uint8_t channel;
 	bool changed;
 	bool value;
-} __attribute__((__packed__)) InputValue_Callback;
+} __attribute__((__packed__)) Value_Callback;
 
 typedef struct {
 	TFPMessageHeader header;
 	uint8_t changed;
 	uint8_t value;
-} __attribute__((__packed__)) AllInputValue_Callback;
+} __attribute__((__packed__)) AllValue_Callback;
 
 // Function prototypes
 BootloaderHandleMessageResponse get_value(const GetValue *data, GetValue_Response *response);
 BootloaderHandleMessageResponse get_selected_value(const GetSelectedValue *data, GetSelectedValue_Response *response);
-BootloaderHandleMessageResponse set_input_value_callback_configuration(const SetInputValueCallbackConfiguration *data);
-BootloaderHandleMessageResponse get_input_value_callback_configuration(const GetInputValueCallbackConfiguration *data, GetInputValueCallbackConfiguration_Response *response);
-BootloaderHandleMessageResponse set_all_input_value_callback_configuration(const SetAllInputValueCallbackConfiguration *data);
-BootloaderHandleMessageResponse get_all_input_value_callback_configuration(const GetAllInputValueCallbackConfiguration *data, GetAllInputValueCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse set_value_callback_configuration(const SetValueCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_value_callback_configuration(const GetValueCallbackConfiguration *data, GetValueCallbackConfiguration_Response *response);
+BootloaderHandleMessageResponse set_all_value_callback_configuration(const SetAllValueCallbackConfiguration *data);
+BootloaderHandleMessageResponse get_all_value_callback_configuration(const GetAllValueCallbackConfiguration *data, GetAllValueCallbackConfiguration_Response *response);
 BootloaderHandleMessageResponse get_edge_count(const GetEdgeCount *data, GetEdgeCount_Response *response);
 BootloaderHandleMessageResponse set_edge_count_configuration(const SetEdgeCountConfiguration *data);
 BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountConfiguration *data, GetEdgeCountConfiguration_Response *response);
@@ -202,13 +202,13 @@ BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig
 BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response);
 
 // Callbacks
-bool handle_input_value_callback(void);
-bool handle_all_input_value_callback(void);
+bool handle_value_callback(void);
+bool handle_all_value_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
 #define COMMUNICATION_CALLBACK_HANDLER_NUM 2
 #define COMMUNICATION_CALLBACK_LIST_INIT \
-	handle_input_value_callback, \
-	handle_all_input_value_callback, \
+	handle_value_callback, \
+	handle_all_value_callback, \
 
 #endif

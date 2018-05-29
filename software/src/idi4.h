@@ -32,11 +32,11 @@
 
 #define NUMBER_OF_CHANNELS 4
 
-#define INPUT_VALUE_CB_BUFFER_UNIT_SIZE 3
-#define INPUT_VALUE_CB_BUFFER_SIZE (256 * INPUT_VALUE_CB_BUFFER_UNIT_SIZE)
+#define VALUE_CB_BUFFER_UNIT_SIZE 3
+#define VALUE_CB_BUFFER_SIZE (256 * VALUE_CB_BUFFER_UNIT_SIZE)
 
-#define ALL_INPUT_VALUE_CB_BUFFER_UNIT_SIZE 2
-#define ALL_INPUT_VALUE_CB_BUFFER_SIZE (256 * ALL_INPUT_VALUE_CB_BUFFER_UNIT_SIZE)
+#define ALL_VALUE_CB_BUFFER_UNIT_SIZE 2
+#define ALL_VALUE_CB_BUFFER_SIZE (256 * ALL_VALUE_CB_BUFFER_UNIT_SIZE)
 
 typedef struct {
 	uint8_t pin;
@@ -58,7 +58,7 @@ typedef struct {
 	uint32_t period_start;
 	bool value_has_to_change;
 	bool last_values[NUMBER_OF_CHANNELS];
-	uint8_t cb_buffer[ALL_INPUT_VALUE_CB_BUFFER_SIZE];
+	uint8_t cb_buffer[ALL_VALUE_CB_BUFFER_SIZE];
 } ALL_CH_IN_VALUE_CB_t;
 
 typedef struct {
@@ -78,8 +78,8 @@ typedef struct {
 
 	// Input channel edge count config
 	CH_IN_EDGE_COUNT_t edge_count;
-	// Input channel input value callback config
-	CH_IN_VALUE_CB_t input_value_cb;
+	// Input channel value callback config
+	CH_IN_VALUE_CB_t value_cb;
 } CH_IN_t;
 
 typedef struct {
@@ -87,11 +87,11 @@ typedef struct {
 	CHANNEL_LED_CONFIG_t channel_leds[NUMBER_OF_CHANNELS];
 
 	// Input value change callback
-	Ringbuffer input_value_cb_rb;
-	uint8_t input_value_cb_buffer[INPUT_VALUE_CB_BUFFER_SIZE];
+	Ringbuffer value_cb_rb;
+	uint8_t value_cb_buffer[VALUE_CB_BUFFER_SIZE];
 
 	// All nput value change callback
-	ALL_CH_IN_VALUE_CB_t all_input_value_cb;
+	ALL_CH_IN_VALUE_CB_t all_value_cb;
 } IDI4_t;
 
 extern IDI4_t idi4;

@@ -127,24 +127,24 @@ void idi4_init() {
 		idi4.channels[i].edge_count.debounce_start = system_timer_get_ms();
 
 		// Input value CB init (disabled)
-		idi4.channels[i].input_value_cb.period = 0;
-		idi4.channels[i].input_value_cb.last_value = idi4.channels[i].value;
-		idi4.channels[i].input_value_cb.period_start = 0;
-		idi4.channels[i].input_value_cb.value_has_to_change = false;
+		idi4.channels[i].value_cb.period = 0;
+		idi4.channels[i].value_cb.last_value = idi4.channels[i].value;
+		idi4.channels[i].value_cb.period_start = 0;
+		idi4.channels[i].value_cb.value_has_to_change = false;
 
-		ringbuffer_init(&idi4.input_value_cb_rb,
-		                INPUT_VALUE_CB_BUFFER_SIZE,
-		                &idi4.input_value_cb_buffer[0]);
+		ringbuffer_init(&idi4.value_cb_rb,
+		                VALUE_CB_BUFFER_SIZE,
+		                &idi4.value_cb_buffer[0]);
 
 		// All input value CB init (disabled)
-		idi4.all_input_value_cb.period = 0;
-		idi4.all_input_value_cb.period_start = 0;
-		idi4.all_input_value_cb.value_has_to_change = false;
-		idi4.all_input_value_cb.last_values[i] = idi4.channels[i].value;
+		idi4.all_value_cb.period = 0;
+		idi4.all_value_cb.period_start = 0;
+		idi4.all_value_cb.value_has_to_change = false;
+		idi4.all_value_cb.last_values[i] = idi4.channels[i].value;
 
-		ringbuffer_init(&idi4.all_input_value_cb.cb_rb,
-		                ALL_INPUT_VALUE_CB_BUFFER_SIZE,
-		                &idi4.all_input_value_cb.cb_buffer[0]);
+		ringbuffer_init(&idi4.all_value_cb.cb_rb,
+		                ALL_VALUE_CB_BUFFER_SIZE,
+		                &idi4.all_value_cb.cb_buffer[0]);
 	}
 }
 
@@ -154,8 +154,8 @@ void idi4_tick(void) {
 	bool all_ch_in_value_changed = false;
 	bool all_ch_in_period_expired = false;
 
-	// Check if all channel input value callback is enabled and if period expired
-	if((idi4.all_input_value_cb.period > 0) && (system_timer_is_time_elapsed_ms(idi4.all_input_value_cb.period_start, idi4.all_input_value_cb.period))) {
+	// Check if all channel value callback is enabled and if period expired
+	if((idi4.all_value_cb.period > 0) && (system_timer_is_time_elapsed_ms(idi4.all_value_cb.period_start, idi4.all_value_cb.period))) {
 		all_ch_in_period_expired = true;
 	}
 
@@ -164,49 +164,49 @@ void idi4_tick(void) {
 		// Update current channel value
 		idi4.channels[i].value = !((bool)XMC_GPIO_GetInput(idi4.channels[i].port_base, idi4.channels[i].pin));
 
-		// Manage channel specific input value callback
-		if((idi4.channels[i].input_value_cb.period > 0)) {
-			if(system_timer_is_time_elapsed_ms(idi4.channels[i].input_value_cb.period_start, idi4.channels[i].input_value_cb.period)) {
+		// Manage channel specific value callback
+		if((idi4.channels[i].value_cb.period > 0)) {
+			if(system_timer_is_time_elapsed_ms(idi4.channels[i].value_cb.period_start, idi4.channels[i].value_cb.period)) {
 				// Period expired
 
-				if(idi4.channels[i].input_value_cb.value_has_to_change) {
+				if(idi4.channels[i].value_cb.value_has_to_change) {
 					// Enqueue callback if value changed otherwise not
-					if(idi4.channels[i].value != idi4.channels[i].input_value_cb.last_value) {
-						if(ringbuffer_get_used(&idi4.input_value_cb_rb) < INPUT_VALUE_CB_BUFFER_SIZE) {
-							ringbuffer_add(&idi4.input_value_cb_rb, i); // Channel
-							ringbuffer_add(&idi4.input_value_cb_rb, (uint8_t)true); // Changed
-							ringbuffer_add(&idi4.input_value_cb_rb, (uint8_t)idi4.channels[i].value); // Value
+					if(idi4.channels[i].value != idi4.channels[i].value_cb.last_value) {
+						if(ringbuffer_get_used(&idi4.value_cb_rb) < VALUE_CB_BUFFER_SIZE) {
+							ringbuffer_add(&idi4.value_cb_rb, i); // Channel
+							ringbuffer_add(&idi4.value_cb_rb, (uint8_t)true); // Changed
+							ringbuffer_add(&idi4.value_cb_rb, (uint8_t)idi4.channels[i].value); // Value
 						}
 					}
 				}
 				else {
 					// Enqueue callback regardless of change
-					if(ringbuffer_get_used(&idi4.input_value_cb_rb) < INPUT_VALUE_CB_BUFFER_SIZE) {
+					if(ringbuffer_get_used(&idi4.value_cb_rb) < VALUE_CB_BUFFER_SIZE) {
 						// Channel
-						ringbuffer_add(&idi4.input_value_cb_rb, i);
+						ringbuffer_add(&idi4.value_cb_rb, i);
 
 						// Changed
-						if(idi4.channels[i].value != idi4.channels[i].input_value_cb.last_value) {
-							ringbuffer_add(&idi4.input_value_cb_rb, (uint8_t)true);
+						if(idi4.channels[i].value != idi4.channels[i].value_cb.last_value) {
+							ringbuffer_add(&idi4.value_cb_rb, (uint8_t)true);
 						}
 						else {
-							ringbuffer_add(&idi4.input_value_cb_rb, (uint8_t)false);
+							ringbuffer_add(&idi4.value_cb_rb, (uint8_t)false);
 						}
 
 						// Value
-						ringbuffer_add(&idi4.input_value_cb_rb, (uint8_t)idi4.channels[i].value);
+						ringbuffer_add(&idi4.value_cb_rb, (uint8_t)idi4.channels[i].value);
 					}
 				}
 
 				// Update last value
-				idi4.channels[i].input_value_cb.last_value = idi4.channels[i].value;
-				idi4.channels[i].input_value_cb.period_start = system_timer_get_ms();
+				idi4.channels[i].value_cb.last_value = idi4.channels[i].value;
+				idi4.channels[i].value_cb.period_start = system_timer_get_ms();
 			}
 		}
 
 		// Manage all input value callback
 		if(all_ch_in_period_expired) {
-			if(idi4.channels[i].value != idi4.all_input_value_cb.last_values[i]) {
+			if(idi4.channels[i].value != idi4.all_value_cb.last_values[i]) {
 				all_ch_in_value_changed = true;
 				all_channel_changed |= (1 << i);
 			}
@@ -222,7 +222,7 @@ void idi4_tick(void) {
 			}
 
 			// Update last value
-			idi4.all_input_value_cb.last_values[i] = idi4.channels[i].value;
+			idi4.all_value_cb.last_values[i] = idi4.channels[i].value;
 		}
 
 		// Manage edge count
@@ -285,31 +285,31 @@ void idi4_tick(void) {
 		}
 	}
 
-	// Manage all input value callback
+	// Manage all value callback
 	if(all_ch_in_period_expired) {
 		// Period expired
 
-		if(idi4.all_input_value_cb.value_has_to_change) {
+		if(idi4.all_value_cb.value_has_to_change) {
 			// Enqueue CB if value changed otherwise not
 			if(all_ch_in_value_changed) {
-				if(ringbuffer_get_used(&idi4.all_input_value_cb.cb_rb) < ALL_INPUT_VALUE_CB_BUFFER_SIZE) {
+				if(ringbuffer_get_used(&idi4.all_value_cb.cb_rb) < ALL_VALUE_CB_BUFFER_SIZE) {
 					// Changed
-					ringbuffer_add(&idi4.all_input_value_cb.cb_rb, all_channel_changed);
+					ringbuffer_add(&idi4.all_value_cb.cb_rb, all_channel_changed);
 					// Value
-					ringbuffer_add(&idi4.all_input_value_cb.cb_rb, all_channel_values);
+					ringbuffer_add(&idi4.all_value_cb.cb_rb, all_channel_values);
 				}
 			}
 		}
 		else {
 			// Enqueue CB regardless of change
-			if(ringbuffer_get_used(&idi4.all_input_value_cb.cb_rb) < ALL_INPUT_VALUE_CB_BUFFER_SIZE) {
+			if(ringbuffer_get_used(&idi4.all_value_cb.cb_rb) < ALL_VALUE_CB_BUFFER_SIZE) {
 				// Changed
-				ringbuffer_add(&idi4.all_input_value_cb.cb_rb, all_channel_changed);
+				ringbuffer_add(&idi4.all_value_cb.cb_rb, all_channel_changed);
 				// Value
-				ringbuffer_add(&idi4.all_input_value_cb.cb_rb, all_channel_values);
+				ringbuffer_add(&idi4.all_value_cb.cb_rb, all_channel_values);
 			}
 		}
 
-		idi4.all_input_value_cb.period_start = system_timer_get_ms();
+		idi4.all_value_cb.period_start = system_timer_get_ms();
 	}
 }
