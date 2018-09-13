@@ -1,0 +1,36 @@
+Notebook[{
+ Cell[
+  BoxData[{
+   RowBox[{"Needs", "[", "\"\<NETLink`\>\"", "]"}],
+   RowBox[{"LoadNETAssembly", "[", RowBox[{"\"\<Tinkerforge\>\"", ",", RowBox[{RowBox[{"NotebookDirectory", "[", "]"}], "<>", "\"\<../../..\>\""}]}], "]"}]
+  }], "Input"
+ ],
+ Cell[
+  BoxData[{
+   RowBox[{"host", "=", "\"\<localhost\>\""}],
+   RowBox[{"port", "=", "4223"}],
+   RowBox[{"uid", "=", "\"\<XYZ\>\"", RowBox[{"(*", "Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0", "*)"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Create IPConnection and device object", "*)"}],
+   RowBox[{"ipcon", "=", RowBox[{"NETNew", "[", "\"\<Tinkerforge.IPConnection\>\"", "]"}]}],
+   RowBox[{"idi4", "=", RowBox[{"NETNew", "[", RowBox[{"\"\<Tinkerforge.BrickletIndustrialDigitalIn4V2\>\"", ",", "uid", ",", "ipcon"}], "]"}]}],
+   RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Get current value", "*)"}],
+   RowBox[{"
+"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 0: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "1"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 1: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "2"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 2: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "3"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 3: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "4"}], "]"}]}], "]"}],
+   RowBox[{"
+"}],
+   RowBox[{"(*", "Clean up", "*)"}],
+   RowBox[{"ipcon", "@", RowBox[{"Disconnect", "[", "]"}]}],
+   RowBox[{"ReleaseNETObject", "[", "idi4", "]"}],
+   RowBox[{"ReleaseNETObject", "[", "ipcon", "]"}]
+  }], "Input"
+ ]
+}]

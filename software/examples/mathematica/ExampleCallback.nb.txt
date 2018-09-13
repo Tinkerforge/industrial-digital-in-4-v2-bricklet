@@ -1,0 +1,31 @@
+Needs["NETLink`"]
+LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
+
+host="localhost"
+port=4223
+uid="XYZ"(*Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0*)
+
+(*Create IPConnection and device object*)
+ipcon=NETNew["Tinkerforge.IPConnection"]
+idi4=NETNew["Tinkerforge.BrickletIndustrialDigitalIn4V2",uid,ipcon]
+ipcon@Connect[host,port]
+
+(*Callback function for value callback*)
+ValueCB[sender_,channel_,changed_,value_]:=
+ Module[{},
+  Print["Channel: "<>ToString[channel]];
+  Print["Changed: "<>ToString[changed]];
+  Print["Value: "<>ToString[value]]
+ ]
+
+AddEventHandler[idi4@ValueCallback,ValueCB]
+
+(*Configure callback for channel 1 with fixed 100ms period*)
+idi4@SetValueCallbackConfiguration[1,100,False]
+
+Input["Click OK to exit"]
+
+(*Clean up*)
+ipcon@Disconnect[]
+ReleaseNETObject[idi4]
+ReleaseNETObject[ipcon]

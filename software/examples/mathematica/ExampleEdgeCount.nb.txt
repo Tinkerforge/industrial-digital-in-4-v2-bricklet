@@ -1,0 +1,28 @@
+Needs["NETLink`"]
+LoadNETAssembly["Tinkerforge",NotebookDirectory[]<>"../../.."]
+
+host="localhost"
+port=4223
+uid="XYZ"(*Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0*)
+
+(*Create IPConnection and device object*)
+ipcon=NETNew["Tinkerforge.IPConnection"]
+idi4=NETNew["Tinkerforge.BrickletIndustrialDigitalIn4V2",uid,ipcon]
+ipcon@Connect[host,port]
+
+(*Configure rising edge count for channel 3 with 10ms debounce*)
+idi4@SetEdgeCountConfiguration[3,0,10]
+
+(*Get edge count 10 times with 1s delay*)
+For[i=0,i<10,i++,
+ Pause[1];
+
+ (*Get current edge count*)
+ Print["Count: "<>ToString[idi4@GetEdgeCount[3,False]]]
+
+]
+
+(*Clean up*)
+ipcon@Disconnect[]
+ReleaseNETObject[idi4]
+ReleaseNETObject[ipcon]
