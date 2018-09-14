@@ -25,7 +25,7 @@ idi4.register_callback(BrickletIndustrialDigitalIn4V2::CALLBACK_VALUE) do |chann
   puts ''
 end
 
-# Configure callback for channel 1 with fixed 100ms period
+# Set period for value (channel 1) callback to 0.1s (100ms)
 idi4.set_value_callback_configuration 1, 100, false
 
 puts 'Press key to exit'

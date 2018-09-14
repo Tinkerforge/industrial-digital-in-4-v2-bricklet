@@ -6,8 +6,8 @@ uid=XYZ # Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0
 # Handle incoming value callbacks
 tinkerforge dispatch industrial-digital-in-4-v2-bricklet $uid value &
 
-# Configure callback for channel 1 with fixed 100ms period
-tinkerforge call industrial-digital-in-4-v2-bricklet $uid set-value-callback-configuration channel-1 100 false
+# Set period for value (channel 1) callback to 0.1s (100ms)
+tinkerforge call industrial-digital-in-4-v2-bricklet $uid set-value-callback-configuration 1 100 false
 
 echo "Press key to exit"; read dummy
 

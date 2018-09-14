@@ -25,7 +25,7 @@ int main(void) {
 	}
 	// Don't use device before ipcon is connected
 
-	// Configure rising edge count for channel 3 with 10ms debounce
+	// Configure rising edge count (channel 3) with 10ms debounce
 	industrial_digital_in_4_v2_set_edge_count_configuration(&idi4, 3, 0, 10);
 
 	// Get edge count 10 times with 1s delay

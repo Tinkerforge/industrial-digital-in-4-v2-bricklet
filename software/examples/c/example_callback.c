@@ -39,7 +39,7 @@ int main(void) {
 	                                             (void *)cb_value,
 	                                             NULL);
 
-	// Configure callback for channel 1 with fixed 100ms period
+	// Set period for value (channel 1) callback to 0.1s (100ms)
 	industrial_digital_in_4_v2_set_value_callback_configuration(&idi4, 1, 100, false);
 
 	printf("Press key to exit\n");

@@ -25,7 +25,7 @@ if __name__ == "__main__":
     # Register value callback to function cb_value
     idi4.register_callback(idi4.CALLBACK_VALUE, cb_value)
 
-    # Configure callback for channel 1 with fixed 100ms period
+    # Set period for value (channel 1) callback to 0.1s (100ms)
     idi4.set_value_callback_configuration(1, 100, False)
 
     raw_input("Press key to exit\n") # Use input() in Python 3

@@ -17,7 +17,7 @@ if __name__ == "__main__":
     ipcon.connect(HOST, PORT) # Connect to brickd
     # Don't use device before ipcon is connected
 
-    # Configure rising edge count for channel 3 with 10ms debounce
+    # Configure rising edge count (channel 3) with 10ms debounce
     idi4.set_edge_count_configuration(3, 0, 10)
 
     # Get edge count 10 times with 1s delay

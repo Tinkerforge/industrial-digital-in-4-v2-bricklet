@@ -25,7 +25,7 @@ Module ExampleCallback
         ' Register value callback to subroutine ValueCB
         AddHandler idi4.ValueCallback, AddressOf ValueCB
 
-        ' Configure callback for channel 1 with fixed 100ms period
+        ' Set period for value (channel 1) callback to 0.1s (100ms)
         idi4.SetValueCallbackConfiguration(1, 100, False)
 
         Console.WriteLine("Press key to exit")

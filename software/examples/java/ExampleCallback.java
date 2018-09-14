@@ -28,7 +28,7 @@ public class ExampleCallback {
 			}
 		});
 
-		// Configure callback for channel 1 with fixed 100ms period
+		// Set period for value (channel 1) callback to 0.1s (100ms)
 		idi4.setValueCallbackConfiguration(1, 100, false);
 
 		System.out.println("Press key to exit"); System.in.read();

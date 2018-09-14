@@ -16,7 +16,7 @@ $idi4 = new BrickletIndustrialDigitalIn4V2(UID, $ipcon); // Create device object
 $ipcon->connect(HOST, PORT); // Connect to brickd
 // Don't use device before ipcon is connected
 
-// Configure rising edge count for channel 3 with 10ms debounce
+// Configure rising edge count (channel 3) with 10ms debounce
 $idi4->setEdgeCountConfiguration(3, 0, 10);
 
 // Get edge count 10 times with 1s delay

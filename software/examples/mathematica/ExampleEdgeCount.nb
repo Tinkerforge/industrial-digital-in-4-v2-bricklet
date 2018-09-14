@@ -18,7 +18,7 @@ Notebook[{
    RowBox[{"ipcon", "@", RowBox[{"Connect", "[", RowBox[{"host", ",", "port"}], "]"}]}],
    RowBox[{"
 "}],
-   RowBox[{"(*", "Configure rising edge count for channel 3 with 10ms debounce", "*)"}],
+   RowBox[{"(*", "Configure rising edge count (channel 3) with 10ms debounce", "*)"}],
    RowBox[{"idi4", "@", RowBox[{"SetEdgeCountConfiguration", "[", RowBox[{"3", ",", "0", ",", "10"}], "]"}]}],
    RowBox[{"
 "}],

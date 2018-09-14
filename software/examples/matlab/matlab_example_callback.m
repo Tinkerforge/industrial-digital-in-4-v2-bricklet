@@ -15,7 +15,7 @@ function matlab_example_callback()
     % Register value callback to function cb_value
     set(idi4, 'ValueCallback', @(h, e) cb_value(e));
 
-    % Configure callback for channel 1 with fixed 100ms period
+    % Set period for value (channel 1) callback to 0.1s (100ms)
     idi4.setValueCallbackConfiguration(1, 100, false);
 
     input('Press key to exit\n', 's');

@@ -3,7 +3,7 @@
 
 uid=XYZ # Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0
 
-# Configure rising edge count for channel 3 with 10ms debounce
+# Configure rising edge count (channel 3) with 10ms debounce
 tinkerforge call industrial-digital-in-4-v2-bricklet $uid set-edge-count-configuration channel-3 edge-type-rising 10
 
 # Get edge count 10 times with 1s delay

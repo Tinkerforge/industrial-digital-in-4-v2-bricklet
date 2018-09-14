@@ -25,7 +25,7 @@ Notebook[{
    RowBox[{"AddEventHandler", "[", RowBox[{RowBox[{"idi4", "@", "ValueCallback"}], ",", "ValueCB"}], "]"}],
    RowBox[{"
 "}],
-   RowBox[{"(*", "Configure callback for channel 1 with fixed 100ms period", "*)"}],
+   RowBox[{"(*", "Set period for value (channel 1) callback to 0.1s (100ms)", "*)"}],
    RowBox[{"idi4", "@", RowBox[{"SetValueCallbackConfiguration", "[", RowBox[{"1", ",", "100", ",", "False"}], "]"}]}],
    RowBox[{"
 "}],

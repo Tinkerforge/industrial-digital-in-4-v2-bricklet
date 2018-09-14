@@ -28,7 +28,7 @@ $ipcon->connect(HOST, PORT); // Connect to brickd
 // Register value callback to function cb_value
 $idi4->registerCallback(BrickletIndustrialDigitalIn4V2::CALLBACK_VALUE, 'cb_value');
 
-// Configure callback for channel 1 with fixed 100ms period
+// Set period for value (channel 1) callback to 0.1s (100ms)
 $idi4->setValueCallbackConfiguration(1, 100, FALSE);
 
 echo "Press ctrl+c to exit\n";

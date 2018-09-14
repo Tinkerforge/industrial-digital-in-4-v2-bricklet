@@ -10,7 +10,7 @@ ipcon=NETNew["Tinkerforge.IPConnection"]
 idi4=NETNew["Tinkerforge.BrickletIndustrialDigitalIn4V2",uid,ipcon]
 ipcon@Connect[host,port]
 
-(*Configure rising edge count for channel 3 with 10ms debounce*)
+(*Configure rising edge count (channel 3) with 10ms debounce*)
 idi4@SetEdgeCountConfiguration[3,0,10]
 
 (*Get edge count 10 times with 1s delay*)

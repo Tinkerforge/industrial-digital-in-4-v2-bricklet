@@ -14,7 +14,7 @@ function octave_example_callback()
     % Register value callback to function cb_value
     idi4.addValueCallback(@cb_value);
 
-    % Configure callback for channel 1 with fixed 100ms period
+    % Set period for value (channel 1) callback to 0.1s (100ms)
     idi4.setValueCallbackConfiguration(1, 100, false);
 
     input("Press key to exit\n", "s");
