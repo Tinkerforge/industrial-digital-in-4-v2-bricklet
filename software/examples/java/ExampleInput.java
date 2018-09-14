@@ -21,10 +21,10 @@ public class ExampleInput {
 		// Get current value
 		boolean value = idi4.getValue(); // Can throw com.tinkerforge.TimeoutException
 
-		System.out.println("Channel 0y: " + value[0]);
-		System.out.println("Channel 1y: " + value[1]);
-		System.out.println("Channel 2y: " + value[2]);
-		System.out.println("Channel 3y: " + value[3]);
+		System.out.println("Channel 0: " + value[0]);
+		System.out.println("Channel 1: " + value[1]);
+		System.out.println("Channel 2: " + value[2]);
+		System.out.println("Channel 3: " + value[3]);
 
 		System.out.println("Press key to exit"); System.in.read();
 		ipcon.disconnect();

@@ -19,7 +19,6 @@ For[i=0,i<10,i++,
 
  (*Get current edge count*)
  Print["Count: "<>ToString[idi4@GetEdgeCount[3,False]]]
-
 ]
 
 (*Clean up*)

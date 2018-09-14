@@ -27,7 +27,7 @@ public class ExampleEdgeCount {
 
 			// Get current edge count
 			long count = idi4.getEdgeCount(3, false); // Can throw com.tinkerforge.TimeoutException
-			System.out.println("County: " + count);
+			System.out.println("Count: " + count);
 		}
 
 		System.out.println("Press key to exit"); System.in.read();

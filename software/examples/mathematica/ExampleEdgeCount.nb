@@ -23,7 +23,7 @@ Notebook[{
    RowBox[{"
 "}],
    RowBox[{"(*", "Get edge count 10 times with 1s delay", "*)"}],
-   RowBox[{"For", "[", RowBox[{RowBox[{"i", "=", "0"}], ",", RowBox[{"i", "<", "10"}], ",", RowBox[{"i", "++"}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"Pause", "[", "1", "]"}], ";", "\n", "\[IndentingNewLine]", RowBox[{"(*", "Get current edge count", "*)"}], "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Count: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetEdgeCount", "[", RowBox[{"3", ",", "False"}], "]"}]}], "]"}]}], "]"}], "\n", "\[IndentingNewLine]"}]}], "]"}],
+   RowBox[{"For", "[", RowBox[{RowBox[{"i", "=", "0"}], ",", RowBox[{"i", "<", "10"}], ",", RowBox[{"i", "++"}], ",", RowBox[{"\[IndentingNewLine]", RowBox[{"Pause", "[", "1", "]"}], ";", "\n", "\[IndentingNewLine]", RowBox[{"(*", "Get current edge count", "*)"}], "\[IndentingNewLine]", RowBox[{"Print", "[", RowBox[{"\"\<Count: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetEdgeCount", "[", RowBox[{"3", ",", "False"}], "]"}]}], "]"}]}], "]"}], "\[IndentingNewLine]"}]}], "]"}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Clean up", "*)"}],
