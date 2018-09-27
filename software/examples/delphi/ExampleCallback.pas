@@ -13,7 +13,7 @@ type
     idi4: TBrickletIndustrialDigitalIn4V2;
   public
     procedure ValueCB(sender: TBrickletIndustrialDigitalIn4V2; const channel: byte;
-                      const changed: boolean; const value: byte);
+                      const changed: boolean; const value: boolean);
     procedure Execute;
   end;
 
@@ -27,7 +27,7 @@ var
 
 { Callback procedure for value callback }
 procedure TExample.ValueCB(sender: TBrickletIndustrialDigitalIn4V2; const channel: byte;
-                           const changed: boolean; const value: byte);
+                           const changed: boolean; const value: boolean);
 begin
   WriteLn(Format('Channel: %d', [channel]));
   WriteLn(Format('Changed: %d', [changed]));

@@ -8,12 +8,12 @@
 #define UID "XYZ" // Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0
 
 // Callback function for value callback
-void cb_value(uint8_t channel, bool changed, uint8_t value, void *user_data) {
+void cb_value(uint8_t channel, bool changed, bool value, void *user_data) {
 	(void)user_data; // avoid unused parameter warning
 
 	printf("Channel: %u\n", channel);
 	printf("Changed: %s\n", changed ? "true" : "false");
-	printf("Value: %u\n", value);
+	printf("Value: %s\n", value ? "true" : "false");
 	printf("\n");
 }
 

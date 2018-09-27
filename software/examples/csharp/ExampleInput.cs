@@ -17,7 +17,7 @@ class Example
 		// Don't use device before ipcon is connected
 
 		// Get current value
-		bool value = idi4.GetValue();
+		bool[] value = idi4.GetValue();
 
 		Console.WriteLine("Channel 0: " + value[0]);
 		Console.WriteLine("Channel 1: " + value[1]);

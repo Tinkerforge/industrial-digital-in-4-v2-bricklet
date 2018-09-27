@@ -8,7 +8,7 @@ Module ExampleCallback
 
     ' Callback subroutine for value callback
     Sub ValueCB(ByVal sender As BrickletIndustrialDigitalIn4V2, ByVal channel As Byte, _
-                ByVal changed As Boolean, ByVal value As Byte)
+                ByVal changed As Boolean, ByVal value As Boolean)
         Console.WriteLine("Channel: " + channel.ToString())
         Console.WriteLine("Changed: " + changed.ToString())
         Console.WriteLine("Value: " + value.ToString())

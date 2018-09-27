@@ -20,7 +20,7 @@ public class ExampleCallback {
 
 		// Add value listener
 		idi4.addValueListener(new BrickletIndustrialDigitalIn4V2.ValueListener() {
-			public void value(int channel, boolean changed, int value) {
+			public void value(int channel, boolean changed, boolean value) {
 				System.out.println("Channel: " + channel);
 				System.out.println("Changed: " + changed);
 				System.out.println("Value: " + value);

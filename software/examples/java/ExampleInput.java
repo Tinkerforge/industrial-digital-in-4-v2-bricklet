@@ -19,7 +19,7 @@ public class ExampleInput {
 		// Don't use device before ipcon is connected
 
 		// Get current value
-		boolean value = idi4.getValue(); // Can throw com.tinkerforge.TimeoutException
+		boolean[] value = idi4.getValue(); // Can throw com.tinkerforge.TimeoutException
 
 		System.out.println("Channel 0: " + value[0]);
 		System.out.println("Channel 1: " + value[1]);

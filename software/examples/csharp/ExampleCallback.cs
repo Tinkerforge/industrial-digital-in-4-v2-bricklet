@@ -9,7 +9,7 @@ class Example
 
 	// Callback function for value callback
 	static void ValueCB(BrickletIndustrialDigitalIn4V2 sender, byte channel, bool changed,
-	                    byte value)
+	                    bool value)
 	{
 		Console.WriteLine("Channel: " + channel);
 		Console.WriteLine("Changed: " + changed);

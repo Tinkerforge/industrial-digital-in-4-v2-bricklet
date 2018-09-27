@@ -14,7 +14,7 @@ Module ExampleInput
         ' Don't use device before ipcon is connected
 
         ' Get current value
-        Dim value As Boolean = idi4.GetValue()
+        Dim value As Boolean() = idi4.GetValue()
 
         Console.WriteLine("Channel 0: " + value(0).ToString())
         Console.WriteLine("Channel 1: " + value(1).ToString())
