@@ -1,4 +1,4 @@
-function matlab_example_input()
+function matlab_example_simple()
     import com.tinkerforge.IPConnection;
     import com.tinkerforge.BrickletIndustrialDigitalIn4V2;
 

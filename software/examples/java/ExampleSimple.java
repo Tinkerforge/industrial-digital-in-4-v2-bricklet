@@ -1,7 +1,7 @@
 import com.tinkerforge.IPConnection;
 import com.tinkerforge.BrickletIndustrialDigitalIn4V2;
 
-public class ExampleInput {
+public class ExampleSimple {
 	private static final String HOST = "localhost";
 	private static final int PORT = 4223;
 

@@ -1,7 +1,7 @@
 Imports System
 Imports Tinkerforge
 
-Module ExampleInput
+Module ExampleSimple
     Const HOST As String = "localhost"
     Const PORT As Integer = 4223
     Const UID As String = "XYZ" ' Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0
