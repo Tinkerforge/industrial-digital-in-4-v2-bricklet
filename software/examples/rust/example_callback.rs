@@ -12,10 +12,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     ipcon.connect((HOST, PORT)).recv()??; // Connect to brickd.
                                           // Don't use device before ipcon is connected.
 
-    // Create receiver for value events.
-    let value_receiver = idi4.get_value_receiver();
+    let value_receiver = idi4.get_value_callback_receiver();
 
-    // Spawn thread to handle received events. This thread ends when the `idi4` object
+    // Spawn thread to handle received callback messages.
+    // This thread ends when the `idi4` object
     // is dropped, so there is no need for manual cleanup.
     thread::spawn(move || {
         for value in value_receiver {
