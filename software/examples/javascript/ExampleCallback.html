@@ -50,7 +50,19 @@
                 idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4V2.CALLBACK_VALUE,
                     // Callback function for value callback
                     function (channel, changed, value) {
-                        textArea.value += 'Channel: ' + channel + '\n';
+                        if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_0) {
+                            textArea.value += 'Channel: 0\n';
+                        }
+                        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_1) {
+                            textArea.value += 'Channel: 1\n';
+                        }
+                        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_2) {
+                            textArea.value += 'Channel: 2\n';
+                        }
+                        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_3) {
+                            textArea.value += 'Channel: 3\n';
+                        }
+
                         textArea.value += 'Changed: ' + changed + '\n';
                         textArea.value += 'Value: ' + value + '\n';
                         textArea.value += '\n';

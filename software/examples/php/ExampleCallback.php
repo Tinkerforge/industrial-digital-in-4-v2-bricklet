@@ -13,7 +13,16 @@ const UID = 'XYZ'; // Change XYZ to the UID of your Industrial Digital In 4 Bric
 // Callback function for value callback
 function cb_value($channel, $changed, $value)
 {
-    echo "Channel: $channel\n";
+    if ($channel == BrickletIndustrialDigitalIn4V2::CHANNEL_0) {
+        echo "Channel: 0\n";
+    } elseif ($channel == BrickletIndustrialDigitalIn4V2::CHANNEL_1) {
+        echo "Channel: 1\n";
+    } elseif ($channel == BrickletIndustrialDigitalIn4V2::CHANNEL_2) {
+        echo "Channel: 2\n";
+    } elseif ($channel == BrickletIndustrialDigitalIn4V2::CHANNEL_3) {
+        echo "Channel: 3\n";
+    }
+
     echo "Changed: $changed\n";
     echo "Value: $value\n";
     echo "\n";

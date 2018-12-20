@@ -19,7 +19,16 @@ ipcon.connect HOST, PORT # Connect to brickd
 # Register value callback
 idi4.register_callback(BrickletIndustrialDigitalIn4V2::CALLBACK_VALUE) do |channel,
                                                                            changed, value|
-  puts "Channel: #{channel}"
+  if channel == BrickletIndustrialDigitalIn4V2::CHANNEL_0
+    puts "Channel: 0"
+  elsif channel == BrickletIndustrialDigitalIn4V2::CHANNEL_1
+    puts "Channel: 1"
+  elsif channel == BrickletIndustrialDigitalIn4V2::CHANNEL_2
+    puts "Channel: 2"
+  elsif channel == BrickletIndustrialDigitalIn4V2::CHANNEL_3
+    puts "Channel: 3"
+  end
+
   puts "Changed: #{changed}"
   puts "Value: #{value}"
   puts ''

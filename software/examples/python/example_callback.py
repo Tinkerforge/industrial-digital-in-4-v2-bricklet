@@ -10,7 +10,15 @@ from tinkerforge.bricklet_industrial_digital_in_4_v2 import BrickletIndustrialDi
 
 # Callback function for value callback
 def cb_value(channel, changed, value):
-    print("Channel: " + str(channel))
+    if channel == BrickletIndustrialDigitalIn4V2.CHANNEL_0:
+        print("Channel: 0")
+    elif channel == BrickletIndustrialDigitalIn4V2.CHANNEL_1:
+        print("Channel: 1")
+    elif channel == BrickletIndustrialDigitalIn4V2.CHANNEL_2:
+        print("Channel: 2")
+    elif channel == BrickletIndustrialDigitalIn4V2.CHANNEL_3:
+        print("Channel: 3")
+
     print("Changed: " + str(changed))
     print("Value: " + str(value))
     print("")

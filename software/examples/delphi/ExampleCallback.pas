@@ -29,7 +29,19 @@ var
 procedure TExample.ValueCB(sender: TBrickletIndustrialDigitalIn4V2; const channel: byte;
                            const changed: boolean; const value: boolean);
 begin
-  WriteLn(Format('Channel: %d', [channel]));
+  if (channel = BRICKLET_INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_0) then begin
+    WriteLn('Channel: 0');
+  end
+  else if (channel = BRICKLET_INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_1) then begin
+    WriteLn('Channel: 1');
+  end
+  else if (channel = BRICKLET_INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_2) then begin
+    WriteLn('Channel: 2');
+  end
+  else if (channel = BRICKLET_INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_3) then begin
+    WriteLn('Channel: 3');
+  end;
+
   WriteLn(Format('Changed: %d', [changed]));
   WriteLn(Format('Value: %d', [value]));
   WriteLn('');

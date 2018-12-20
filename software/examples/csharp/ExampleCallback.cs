@@ -11,7 +11,23 @@ class Example
 	static void ValueCB(BrickletIndustrialDigitalIn4V2 sender, byte channel, bool changed,
 	                    bool value)
 	{
-		Console.WriteLine("Channel: " + channel);
+		if(channel == BrickletIndustrialDigitalIn4V2.CHANNEL_0)
+		{
+			Console.WriteLine("Channel: 0");
+		}
+		else if(channel == BrickletIndustrialDigitalIn4V2.CHANNEL_1)
+		{
+			Console.WriteLine("Channel: 1");
+		}
+		else if(channel == BrickletIndustrialDigitalIn4V2.CHANNEL_2)
+		{
+			Console.WriteLine("Channel: 2");
+		}
+		else if(channel == BrickletIndustrialDigitalIn4V2.CHANNEL_3)
+		{
+			Console.WriteLine("Channel: 3");
+		}
+
 		Console.WriteLine("Changed: " + changed);
 		Console.WriteLine("Value: " + value);
 		Console.WriteLine("");

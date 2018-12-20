@@ -25,7 +25,19 @@ ipcon.on(Tinkerforge.IPConnection.CALLBACK_CONNECTED,
 idi4.on(Tinkerforge.BrickletIndustrialDigitalIn4V2.CALLBACK_VALUE,
     // Callback function for value callback
     function (channel, changed, value) {
-        console.log('Channel: ' + channel);
+        if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_0) {
+            console.log('Channel: 0');
+        }
+        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_1) {
+            console.log('Channel: 1');
+        }
+        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_2) {
+            console.log('Channel: 2');
+        }
+        else if(channel === Tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_3) {
+            console.log('Channel: 3');
+        }
+
         console.log('Changed: ' + changed);
         console.log('Value: ' + value);
         console.log();

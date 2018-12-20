@@ -24,7 +24,16 @@ end
 
 % Callback function for value callback
 function cb_value(e)
-    fprintf('Channel: %i\n', e.channel);
+    if e.channel == com.tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_0
+        fprintf('Channel: 0\n');
+    elseif e.channel == com.tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_1
+        fprintf('Channel: 1\n');
+    elseif e.channel == com.tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_2
+        fprintf('Channel: 2\n');
+    elseif e.channel == com.tinkerforge.BrickletIndustrialDigitalIn4V2.CHANNEL_3
+        fprintf('Channel: 3\n');
+    end
+
     fprintf('Changed: %i\n', e.changed);
     fprintf('Value: %i\n', e.value);
     fprintf('\n');

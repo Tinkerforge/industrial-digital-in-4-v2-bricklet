@@ -9,7 +9,16 @@ Module ExampleCallback
     ' Callback subroutine for value callback
     Sub ValueCB(ByVal sender As BrickletIndustrialDigitalIn4V2, ByVal channel As Byte, _
                 ByVal changed As Boolean, ByVal value As Boolean)
-        Console.WriteLine("Channel: " + channel.ToString())
+        If channel = BrickletIndustrialDigitalIn4V2.CHANNEL_0 Then
+            Console.WriteLine("Channel: 0")
+        Else If channel = BrickletIndustrialDigitalIn4V2.CHANNEL_1 Then
+            Console.WriteLine("Channel: 1")
+        Else If channel = BrickletIndustrialDigitalIn4V2.CHANNEL_2 Then
+            Console.WriteLine("Channel: 2")
+        Else If channel = BrickletIndustrialDigitalIn4V2.CHANNEL_3 Then
+            Console.WriteLine("Channel: 3")
+        End If
+
         Console.WriteLine("Changed: " + changed.ToString())
         Console.WriteLine("Value: " + value.ToString())
         Console.WriteLine("")

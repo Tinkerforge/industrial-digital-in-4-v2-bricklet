@@ -19,7 +19,16 @@ fn main() -> Result<(), Box<dyn Error>> {
     // is dropped, so there is no need for manual cleanup.
     thread::spawn(move || {
         for value in value_receiver {
-            println!("Channel: {}", value.channel);
+            if value.channel == INDUSTRIAL_DIGITAL_IN_4_V2_BRICKLET_CHANNEL_0 {
+                println!("Channel: 0");
+            } else if value.channel == INDUSTRIAL_DIGITAL_IN_4_V2_BRICKLET_CHANNEL_1 {
+                println!("Channel: 1");
+            } else if value.channel == INDUSTRIAL_DIGITAL_IN_4_V2_BRICKLET_CHANNEL_2 {
+                println!("Channel: 2");
+            } else if value.channel == INDUSTRIAL_DIGITAL_IN_4_V2_BRICKLET_CHANNEL_3 {
+                println!("Channel: 3");
+            }
+
             println!("Changed: {}", value.changed);
             println!("Value: {}", value.value);
             println!();

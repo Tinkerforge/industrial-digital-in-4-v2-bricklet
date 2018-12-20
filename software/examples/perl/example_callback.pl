@@ -13,7 +13,23 @@ sub cb_value
 {
     my ($channel, $changed, $value) = @_;
 
-    print "Channel: $channel\n";
+    if ($channel == Tinkerforge::BrickletIndustrialDigitalIn4V2->CHANNEL_0)
+    {
+        print "Channel: 0\n";
+    }
+    elsif ($channel == Tinkerforge::BrickletIndustrialDigitalIn4V2->CHANNEL_1)
+    {
+        print "Channel: 1\n";
+    }
+    elsif ($channel == Tinkerforge::BrickletIndustrialDigitalIn4V2->CHANNEL_2)
+    {
+        print "Channel: 2\n";
+    }
+    elsif ($channel == Tinkerforge::BrickletIndustrialDigitalIn4V2->CHANNEL_3)
+    {
+        print "Channel: 3\n";
+    }
+
     print "Changed: $changed\n";
     print "Value: $value\n";
     print "\n";

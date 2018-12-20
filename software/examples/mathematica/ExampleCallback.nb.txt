@@ -13,7 +13,10 @@ ipcon@Connect[host,port]
 (*Callback function for value callback*)
 ValueCB[sender_,channel_,changed_,value_]:=
  Module[{},
-  Print["Channel: "<>ToString[channel]];
+  If[channel==Tinkerforge`BrickletIndustrialDigitalIn4V2`CHANNELU0,Print["Channel: 0"]];
+  If[channel==Tinkerforge`BrickletIndustrialDigitalIn4V2`CHANNELU1,Print["Channel: 1"]];
+  If[channel==Tinkerforge`BrickletIndustrialDigitalIn4V2`CHANNELU2,Print["Channel: 2"]];
+  If[channel==Tinkerforge`BrickletIndustrialDigitalIn4V2`CHANNELU3,Print["Channel: 3"]];
   Print["Changed: "<>ToString[changed]];
   Print["Value: "<>ToString[value]]
  ]

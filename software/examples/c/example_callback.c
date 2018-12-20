@@ -11,7 +11,16 @@
 void cb_value(uint8_t channel, bool changed, bool value, void *user_data) {
 	(void)user_data; // avoid unused parameter warning
 
-	printf("Channel: %u\n", channel);
+	if(channel == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_0) {
+		printf("Channel: 0\n");
+	} else if(channel == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_1) {
+		printf("Channel: 1\n");
+	} else if(channel == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_2) {
+		printf("Channel: 2\n");
+	} else if(channel == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_3) {
+		printf("Channel: 3\n");
+	}
+
 	printf("Changed: %s\n", changed ? "true" : "false");
 	printf("Value: %s\n", value ? "true" : "false");
 	printf("\n");
