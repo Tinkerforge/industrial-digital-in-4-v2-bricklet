@@ -2,5 +2,5 @@
 
 setup:
 	# Get current value
-	subscribe to tinkerforge/response/industrial_digital_in_4_v2/XYZ/get_value
+	subscribe to tinkerforge/response/industrial_digital_in_4_v2_bricklet/XYZ/get_value
 	publish '' to tinkerforge/request/industrial_digital_in_4_v2_bricklet/XYZ/get_value 

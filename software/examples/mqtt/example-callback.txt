@@ -4,5 +4,6 @@ setup:
 	# Handle incoming value callbacks
 	subscribe to tinkerforge/callback/industrial_digital_in_4_v2_bricklet/XYZ/value
 	publish '{"register": true}' to tinkerforge/register/industrial_digital_in_4_v2_bricklet/XYZ/value # Register value callback
+	
 	# Set period for value (channel 1) callback to 0.1s (100ms)
 	publish '{"channel": 1, "period": 100, "value_has_to_change": false}' to tinkerforge/request/industrial_digital_in_4_v2_bricklet/XYZ/set_value_callback_configuration 
