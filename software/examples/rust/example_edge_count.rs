@@ -16,7 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     idi4.set_edge_count_configuration(3, 0, 10);
 
     // Get edge count 10 times with 1s delay
-    for i in 0..10 {
+    for _i in 0..10 {
         thread::sleep(Duration::from_millis(1000));
 
         // Get current edge count.
