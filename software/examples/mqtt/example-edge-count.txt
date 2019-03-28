@@ -11,6 +11,6 @@ setup:
 	
 		# Get current edge count
 	subscribe to tinkerforge/response/industrial_digital_in_4_v2_bricklet/XYZ/get_edge_count
-	publish '{"channel": "3", "reset_counter": false}' to tinkerforge/request/industrial_digital_in_4_v2_bricklet/XYZ/get_edge_count 
+	publish '{"channel": "3", "reset_counter": false}' to tinkerforge/request/industrial_digital_in_4_v2_bricklet/XYZ/get_edge_count
 	
 	done
