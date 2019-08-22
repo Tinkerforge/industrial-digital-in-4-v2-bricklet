@@ -45,7 +45,7 @@ int main(void) {
 	// Register value callback to function cb_value
 	industrial_digital_in_4_v2_register_callback(&idi4,
 	                                             INDUSTRIAL_DIGITAL_IN_4_V2_CALLBACK_VALUE,
-	                                             (void *)cb_value,
+	                                             (void (*)(void))cb_value,
 	                                             NULL);
 
 	// Set period for value (channel 1) callback to 0.1s (100ms)
