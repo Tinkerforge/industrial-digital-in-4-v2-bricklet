@@ -23,5 +23,5 @@ if __name__ == "__main__":
     print("Channel 2: " + str(value[2]))
     print("Channel 3: " + str(value[3]))
 
-    raw_input("Press key to exit\n") # Use input() in Python 3
+    input("Press key to exit\n") # Use raw_input() in Python 2
     ipcon.disconnect()

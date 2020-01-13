@@ -36,5 +36,5 @@ if __name__ == "__main__":
     # Set period for value (channel 1) callback to 0.1s (100ms)
     idi4.set_value_callback_configuration(1, 100, False)
 
-    raw_input("Press key to exit\n") # Use input() in Python 3
+    input("Press key to exit\n") # Use raw_input() in Python 2
     ipcon.disconnect()
