@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                                           // Don't use device before ipcon is connected.
 
     // Configure rising edge count (channel 3) with 10ms debounce
-    idi4.set_edge_count_configuration(3, 0, 10);
+    idi4.set_edge_count_configuration(3, 0, 10).recv()?;
 
     // Get edge count 10 times with 1s delay
     for _i in 0..10 {
