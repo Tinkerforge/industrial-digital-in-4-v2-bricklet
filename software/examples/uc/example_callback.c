@@ -1,13 +1,9 @@
-
-
 #include "bindings/hal_common.h"
 #include "bindings/bricklet_industrial_digital_in_4_v2.h"
 
 #define UID "XYZ" // Change XYZ to the UID of your Industrial Digital In 4 Bricklet 2.0
 
 void check(int rc, const char* msg);
-
-
 
 // Callback function for value callback
 void value_handler(TF_IndustrialDigitalIn4V2 *device, uint8_t channel, bool changed,
@@ -28,7 +24,6 @@ void value_handler(TF_IndustrialDigitalIn4V2 *device, uint8_t channel, bool chan
 	tf_hal_printf("Value: %s\n", value ? "true" : "false");
 	tf_hal_printf("\n");
 }
-
 
 TF_IndustrialDigitalIn4V2 idi4;
 
