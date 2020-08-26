@@ -11,7 +11,6 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_industrial_digital_in_4_v2_create(&idi4, UID, hal), "create device object");
 
-
 	// Get current value
 	bool value[4];
 	check(tf_industrial_digital_in_4_v2_get_value(&idi4, value), "get value");
@@ -20,7 +19,6 @@ void example_setup(TF_HalContext *hal) {
 	tf_hal_printf("Channel 1: %s\n", value[1] ? "true" : "false");
 	tf_hal_printf("Channel 2: %s\n", value[2] ? "true" : "false");
 	tf_hal_printf("Channel 3: %s\n", value[3] ? "true" : "false");
-
 }
 
 void example_loop(TF_HalContext *hal) {

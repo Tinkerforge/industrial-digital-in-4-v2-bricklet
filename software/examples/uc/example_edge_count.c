@@ -11,7 +11,6 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_industrial_digital_in_4_v2_create(&idi4, UID, hal), "create device object");
 
-
 	// Configure rising edge count (channel 3) with 10ms debounce
 	check(tf_industrial_digital_in_4_v2_set_edge_count_configuration(&idi4, 3, 0,
 	                                                                 10), "call set_edge_count_configuration");
@@ -28,7 +27,6 @@ void example_setup(TF_HalContext *hal) {
 
 		tf_hal_printf("Count: %u\n", count);
 	}
-
 }
 
 void example_loop(TF_HalContext *hal) {

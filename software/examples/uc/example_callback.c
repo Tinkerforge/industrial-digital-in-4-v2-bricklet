@@ -31,15 +31,13 @@ void example_setup(TF_HalContext *hal) {
 	// Create device object
 	check(tf_industrial_digital_in_4_v2_create(&idi4, UID, hal), "create device object");
 
-
 	// Register value callback to function value_handler
 	tf_industrial_digital_in_4_v2_register_value_callback(&idi4,
-	                                                     value_handler,
-	                                                     NULL);
+	                                                      value_handler,
+	                                                      NULL);
 
 	// Set period for value (channel 1) callback to 0.1s (100ms)
 	tf_industrial_digital_in_4_v2_set_value_callback_configuration(&idi4, 1, 100, false);
-
 }
 
 void example_loop(TF_HalContext *hal) {
