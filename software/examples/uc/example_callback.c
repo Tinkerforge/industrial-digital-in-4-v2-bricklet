@@ -5,9 +5,13 @@
 
 void check(int rc, const char* msg);
 
+void example_setup(TF_HalContext *hal);
+void example_loop(TF_HalContext *hal);
+
+
 // Callback function for value callback
-void value_handler(TF_IndustrialDigitalIn4V2 *device, uint8_t channel, bool changed,
-                   bool value, void *user_data) {
+static void value_handler(TF_IndustrialDigitalIn4V2 *device, uint8_t channel,
+                          bool changed, bool value, void *user_data) {
 	(void)device; (void)user_data; // avoid unused parameter warning
 
 	if(channel == TF_INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_0) {
@@ -25,7 +29,7 @@ void value_handler(TF_IndustrialDigitalIn4V2 *device, uint8_t channel, bool chan
 	tf_hal_printf("\n");
 }
 
-TF_IndustrialDigitalIn4V2 idi4;
+static TF_IndustrialDigitalIn4V2 idi4;
 
 void example_setup(TF_HalContext *hal) {
 	// Create device object
