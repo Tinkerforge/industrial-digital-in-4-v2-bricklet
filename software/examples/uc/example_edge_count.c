@@ -29,7 +29,7 @@ void example_setup(TF_HalContext *hal) {
 		check(tf_industrial_digital_in_4_v2_get_edge_count(&idi4, 3, false,
 		                                                   &count), "get edge count");
 
-		tf_hal_printf("Count: %u\n", count);
+		tf_hal_printf("Count: %I32u\n", count);
 	}
 }
 
