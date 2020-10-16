@@ -1,5 +1,6 @@
 /* industrial-digital-in-4-v2-bricklet
  * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
+ * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * idi4.h: Implementation of Industrial Digital In V2 Bricklet
  *
@@ -19,8 +20,8 @@
  * Boston, MA 02111-1307, USA.
  */
 
-#ifndef CONFIG_IDI4_H
-#define CONFIG_IDI4_H
+#ifndef IDI4_H
+#define IDI4_H
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -30,72 +31,37 @@
 
 #include "xmc_gpio.h"
 
-#define NUMBER_OF_CHANNELS 4
-
-#define VALUE_CB_BUFFER_UNIT_SIZE 3
-#define VALUE_CB_BUFFER_SIZE (256 * VALUE_CB_BUFFER_UNIT_SIZE)
-
-#define ALL_VALUE_CB_BUFFER_UNIT_SIZE 2
-#define ALL_VALUE_CB_BUFFER_SIZE (256 * ALL_VALUE_CB_BUFFER_UNIT_SIZE)
+#define IDI4_CHANNEL_NUM 4
 
 typedef struct {
-	uint8_t pin;
-	uint8_t config;
-	XMC_GPIO_PORT_t *port_base;
-	LEDFlickerState channel_led_flicker_state;
-} CHANNEL_LED_CONFIG_t;
-
-typedef struct {
-	uint32_t period;
-	bool last_value;
-	uint32_t period_start;
-	bool value_has_to_change;
-} CH_IN_VALUE_CB_t;
-
-typedef struct {
-	uint32_t period;
-	Ringbuffer cb_rb;
-	uint32_t period_start;
-	bool value_has_to_change;
-	bool last_values[NUMBER_OF_CHANNELS];
-	uint8_t cb_buffer[ALL_VALUE_CB_BUFFER_SIZE];
-} ALL_CH_IN_VALUE_CB_t;
-
-typedef struct {
-	bool last_value;
-	uint8_t debounce;
-	uint8_t edge_type;
+	bool     last_value;
+	uint8_t  debounce;
+	uint8_t  edge_type;
 	uint32_t debounce_start;
-	uint32_t cnt_edge_rising;
-	uint32_t cnt_edge_falling;
-} CH_IN_EDGE_COUNT_t;
+	uint32_t count_edge_rising;
+	uint32_t count_edge_falling;
+} IDI4EdgeCount;
 
 typedef struct {
-	// Generic channel config
-	bool value;
-	uint8_t pin;
-	XMC_GPIO_PORT_t *port_base;
+	bool            channel_value[IDI4_CHANNEL_NUM];
+	LEDFlickerState channel_led_flicker_state[IDI4_CHANNEL_NUM];
+	IDI4EdgeCount   edge_count[IDI4_CHANNEL_NUM];
 
-	// Input channel edge count config
-	CH_IN_EDGE_COUNT_t edge_count;
-	// Input channel value callback config
-	CH_IN_VALUE_CB_t value_cb;
-} CH_IN_t;
+	uint32_t cb_value_period[IDI4_CHANNEL_NUM];
+	bool     cb_value_has_to_change[IDI4_CHANNEL_NUM];
+	uint32_t cb_value_last_time[IDI4_CHANNEL_NUM];
+	bool     cb_value_last_value[IDI4_CHANNEL_NUM];
 
-typedef struct {
-	CH_IN_t channels[NUMBER_OF_CHANNELS];
-	CHANNEL_LED_CONFIG_t channel_leds[NUMBER_OF_CHANNELS];
+	uint32_t cb_all_period;
+	bool     cb_all_has_to_change;
+	uint32_t cb_all_last_time;
+	uint8_t  cb_all_last_value;
+} IDI4;
 
-	// Input value change callback
-	Ringbuffer value_cb_rb;
-	uint8_t value_cb_buffer[VALUE_CB_BUFFER_SIZE];
+extern IDI4 idi4;
 
-	// All nput value change callback
-	ALL_CH_IN_VALUE_CB_t all_value_cb;
-} IDI4_t;
 
-extern IDI4_t idi4;
-
+uint8_t idi4_get_value_bitmask(void);
 void idi4_init(void);
 void idi4_tick(void);
 

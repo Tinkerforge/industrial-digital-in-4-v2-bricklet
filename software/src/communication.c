@@ -1,5 +1,6 @@
 /* industrial-digital-in-4-v2-bricklet
  * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
+ * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.c: TFP protocol message handling
  *
@@ -27,6 +28,9 @@
 
 #include "idi4.h"
 
+extern const uint8_t idi4_channel_led_pin[];
+extern XMC_GPIO_PORT_t *const idi4_channel_led_port[];
+
 BootloaderHandleMessageResponse handle_message(const void *message, void *response) {
 	switch(tfp_get_fid_from_message(message)) {
 		case FID_GET_VALUE: return get_value(message, response);
@@ -44,210 +48,177 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 }
 
 BootloaderHandleMessageResponse get_value(const GetValue *data, GetValue_Response *response) {
-	logd("[+] IDI4-V2: get_value()\n\r");
-
-	uint8_t bit_encoded_values = 0;
 	response->header.length = sizeof(GetValue_Response);
-
-	for(uint8_t i = 0; i < NUMBER_OF_CHANNELS; i++) {
-		if(idi4.channels[i].value) {
-			bit_encoded_values |= (1 << i);
-		}
-		else {
-			bit_encoded_values &= ~(1 << i);
-		}
-	}
-
-	response->value = bit_encoded_values;
+	response->value         = idi4_get_value_bitmask();
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_value_callback_configuration(const SetValueCallbackConfiguration *data) {
-	logd("[+] IDI4-V2: set_value_callback_configuration()\n\r");
-
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}
+	}	
 
-	idi4.channels[data->channel].value_cb.period_start = 0;
-	idi4.channels[data->channel].value_cb.period = data->period;
-	idi4.channels[data->channel].value_cb.value_has_to_change = data->value_has_to_change;
-
-	if(idi4.channels[data->channel].value_cb.period > 0) {
-		idi4.channels[data->channel].value_cb.last_value = \
-			!((bool)XMC_GPIO_GetInput(idi4.channels[data->channel].port_base,
-		                              idi4.channels[data->channel].pin));
-		idi4.channels[data->channel].value_cb.period_start = system_timer_get_ms();
-	}
+	idi4.cb_value_period[data->channel]        = data->period;
+	idi4.cb_value_has_to_change[data->channel] = data->value_has_to_change;
+	idi4.cb_value_last_value[data->channel]    = idi4.channel_value[data->channel];
+	idi4.cb_value_last_time[data->channel]     = 0;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_value_callback_configuration(const GetValueCallbackConfiguration *data, GetValueCallbackConfiguration_Response *response) {
-	logd("[+] IDI4-V2: get_value_callback_configuration()\n\r");
-
-	response->header.length = sizeof(GetValueCallbackConfiguration_Response);
-
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	response->period = idi4.channels[data->channel].value_cb.period;
-	response->value_has_to_change = idi4.channels[data->channel].value_cb.value_has_to_change;
+	response->header.length       = sizeof(GetValueCallbackConfiguration_Response);
+	response->period              = idi4.cb_value_period[data->channel];
+	response->value_has_to_change = idi4.cb_value_has_to_change[data->channel];
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_all_value_callback_configuration(const SetAllValueCallbackConfiguration *data) {
-	logd("[+] IDI4-V2: set_all_value_callback_configuration()\n\r");
-
-	idi4.all_value_cb.period_start = 0;
-	idi4.all_value_cb.period = data->period;
-	idi4.all_value_cb.value_has_to_change = data->value_has_to_change;
-
-	if(idi4.all_value_cb.period > 0) {		
-		// Store current channel states
-		for(uint8_t i = 0; i < NUMBER_OF_CHANNELS; i++) {
-			idi4.all_value_cb.last_values[i] = \
-				!((bool)XMC_GPIO_GetInput(idi4.channels[i].port_base, idi4.channels[i].pin));
-		}
-
-		idi4.all_value_cb.period_start = system_timer_get_ms();
-	}
+	idi4.cb_all_period        = data->period;
+	idi4.cb_all_has_to_change = data->value_has_to_change;
+	idi4.cb_all_last_value    = idi4_get_value_bitmask();
+	idi4.cb_all_last_time     = 0;
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_all_value_callback_configuration(const GetAllValueCallbackConfiguration *data, GetAllValueCallbackConfiguration_Response *response) {
-	logd("[+] IDI4-V2: get_all_value_callback_configuration()\n\r");
-
-	response->header.length = sizeof(GetValueCallbackConfiguration_Response);
-	response->period = idi4.all_value_cb.period;
-	response->value_has_to_change = idi4.all_value_cb.value_has_to_change;
+	response->header.length       = sizeof(GetValueCallbackConfiguration_Response);
+	response->period              = idi4.cb_all_period;
+	response->value_has_to_change = idi4.cb_all_has_to_change;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse get_edge_count(const GetEdgeCount *data, GetEdgeCount_Response *response) {
-	logd("[+] IDI4-V2: get_edge_count()\n\r");
+	if(data->channel >= IDI4_CHANNEL_NUM) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}	
 
 	response->header.length = sizeof(GetEdgeCount_Response);
 
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
-		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}
-
-	if(idi4.channels[data->channel].edge_count.edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_RISING) {
-		response->count = idi4.channels[data->channel].edge_count.cnt_edge_rising;
-	}
-	else if(idi4.channels[data->channel].edge_count.edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_FALLING) {
-		response->count = idi4.channels[data->channel].edge_count.cnt_edge_falling;
-	}
-	else if(idi4.channels[data->channel].edge_count.edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_BOTH) {
-		response->count = \
-			idi4.channels[data->channel].edge_count.cnt_edge_rising + \
-			idi4.channels[data->channel].edge_count.cnt_edge_falling;
+	if(idi4.edge_count[data->channel].edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_RISING) {
+		response->count = idi4.edge_count[data->channel].count_edge_rising;
+	} else if(idi4.edge_count[data->channel].edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_FALLING) {
+		response->count = idi4.edge_count[data->channel].count_edge_falling;
+	} else if(idi4.edge_count[data->channel].edge_type == INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_BOTH) {
+		response->count = idi4.edge_count[data->channel].count_edge_rising + idi4.edge_count[data->channel].count_edge_falling;
 	}
 
 	if(data->reset_counter) {
-		idi4.channels[data->channel].edge_count.cnt_edge_rising = 0;
-		idi4.channels[data->channel].edge_count.cnt_edge_falling = 0;
+		idi4.edge_count[data->channel].count_edge_rising  = 0;
+		idi4.edge_count[data->channel].count_edge_falling = 0;
 	}
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_edge_count_configuration(const SetEdgeCountConfiguration *data) {
-	logd("[+] IDI4-V2: set_edge_count_configuration()\n\r");
-
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
-	}
+	}	
 
-	idi4.channels[data->channel].edge_count.cnt_edge_rising = 0;
-	idi4.channels[data->channel].edge_count.cnt_edge_falling = 0;
-	idi4.channels[data->channel].edge_count.debounce = data->debounce;
-	idi4.channels[data->channel].edge_count.edge_type = data->edge_type;
-	idi4.channels[data->channel].edge_count.last_value = \
-		!((bool)XMC_GPIO_GetInput(idi4.channels[data->channel].port_base,
-		                          idi4.channels[data->channel].pin));
-	idi4.channels[data->channel].edge_count.debounce_start = system_timer_get_ms();
+	idi4.edge_count[data->channel].count_edge_rising  = 0;
+	idi4.edge_count[data->channel].count_edge_falling = 0;
+	idi4.edge_count[data->channel].debounce           = data->debounce;
+	idi4.edge_count[data->channel].edge_type          = data->edge_type;
+	idi4.edge_count[data->channel].last_value         = idi4.channel_value[data->channel];
+	idi4.edge_count[data->channel].debounce_start     = system_timer_get_ms();
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountConfiguration *data, GetEdgeCountConfiguration_Response *response) {
-	logd("[+] IDI4-V2: get_edge_count_configuration()\n\r");
-
-	response->header.length = sizeof(GetEdgeCountConfiguration_Response);
-
-	if(data->channel > NUMBER_OF_CHANNELS - 1) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	response->debounce = idi4.channels[data->channel].edge_count.debounce;
-	response->edge_type = idi4.channels[data->channel].edge_count.edge_type;
+	response->header.length = sizeof(GetEdgeCountConfiguration_Response);
+	response->debounce      = idi4.edge_count[data->channel].debounce;
+	response->edge_type     = idi4.edge_count[data->channel].edge_type;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
 BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig *data) {
-	logd("[+] IDI4-V2: set_edge_count_configuration()\n\r");
-
-	if(data->led > NUMBER_OF_CHANNELS - 1) {
+	if(data->led >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	idi4.channel_leds[data->led].config = data->config;
+	if(data->config > INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_SHOW_CHANNEL_STATUS) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	idi4.channel_led_flicker_state[data->led].config = data->config;
+	if(data->config == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_OFF) {
+		XMC_GPIO_SetOutputHigh(idi4_channel_led_port[data->led], idi4_channel_led_pin[data->led]);
+	} else if(data->config == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_ON) {
+		XMC_GPIO_SetOutputLow(idi4_channel_led_port[data->led], idi4_channel_led_pin[data->led]);
+	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response) {
-	logd("[+] IDI4-V2: get_channel_led_config()\n\r");
-
-	response->header.length = sizeof(GetChannelLEDConfig_Response);
-
-	if(data->led > NUMBER_OF_CHANNELS - 1) {
+	if(data->led >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
+	
 
-	response->config = idi4.channel_leds[data->led].config;
+	response->header.length = sizeof(GetChannelLEDConfig_Response);
+	response->config        = idi4.channel_led_flicker_state[data->led].config;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
 
-bool handle_value_callback(void) {
-	static bool is_buffered = false;
-	static Value_Callback cb;
+bool handle_value_callback_channel(const uint8_t channel) {
+	static bool is_buffered[IDI4_CHANNEL_NUM] = {false, false, false, false};
+	static Value_Callback cb[IDI4_CHANNEL_NUM];
 
-	if(!is_buffered) {
-		if(ringbuffer_is_empty(&idi4.value_cb_rb)) {
-			// Nothing to send
+	if(!is_buffered[channel]) {
+		if((idi4.cb_value_period[channel] == 0) || !system_timer_is_time_elapsed_ms(idi4.cb_value_last_time[channel], idi4.cb_value_period[channel])) {
 			return false;
 		}
 
-		tfp_make_default_header(&cb.header,
-		                        bootloader_get_uid(),
-		                        sizeof(Value_Callback),
-		                        FID_CALLBACK_VALUE);
-
-		ringbuffer_get(&idi4.value_cb_rb, &cb.channel);
-		ringbuffer_get(&idi4.value_cb_rb, (uint8_t *)&cb.changed);
-		ringbuffer_get(&idi4.value_cb_rb, (uint8_t *)&cb.value);
+		const bool changed = idi4.cb_value_last_value[channel] != idi4.channel_value[channel];
+		if(idi4.cb_value_has_to_change[channel] && !changed) {
+			return false;
+		}
+			
+		tfp_make_default_header(&cb[channel].header, bootloader_get_uid(), sizeof(Value_Callback), FID_CALLBACK_VALUE);
+		cb[channel].channel = channel;
+		cb[channel].changed = changed;
+		cb[channel].value   = idi4.channel_value[channel];
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
-		bootloader_spitfp_send_ack_and_message(&bootloader_status,
-		                                       (uint8_t*)&cb,
-		                                       sizeof(Value_Callback));
-		is_buffered = false;
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb[channel], sizeof(Value_Callback));
+		is_buffered[channel] = false;
 
 		return true;
+	} else {
+		is_buffered[channel] = true;
 	}
-	else {
-		is_buffered = true;
+
+	return false;
+}
+
+bool handle_value_callback(void) {
+	static uint8_t channel = 0;
+
+	// Go through all channels round robin until one of the channels has something to send
+	for(uint8_t i = 0; i < IDI4_CHANNEL_NUM; i++) {
+		bool ret = handle_value_callback_channel(channel);
+		channel = (channel+1) % 4;
+		if(ret) {
+			return true;
+		}
 	}
 
 	return false;
@@ -258,30 +229,27 @@ bool handle_all_value_callback(void) {
 	static AllValue_Callback cb;
 
 	if(!is_buffered) {
-		if(ringbuffer_is_empty(&idi4.all_value_cb.cb_rb)) {
-			// Nothing to send
+		if((idi4.cb_all_period == 0) || !system_timer_is_time_elapsed_ms(idi4.cb_all_last_time, idi4.cb_all_period)) {
 			return false;
 		}
 
-		tfp_make_default_header(&cb.header,
-		                        bootloader_get_uid(),
-		                        sizeof(AllValue_Callback),
-		                        FID_CALLBACK_ALL_VALUE);
-
-		ringbuffer_get(&idi4.all_value_cb.cb_rb, &cb.changed);
-		ringbuffer_get(&idi4.all_value_cb.cb_rb, &cb.value);
+		const uint8_t value   = idi4_get_value_bitmask();
+		const uint8_t changed = idi4.cb_all_last_value ^ value;
+		if(idi4.cb_all_has_to_change && (changed == 0)) {
+			return false;
+		}
+			
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(Value_Callback), FID_CALLBACK_VALUE);
+		cb.changed = changed;
+		cb.value   = value;
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
-		bootloader_spitfp_send_ack_and_message(&bootloader_status,
-		                                       (uint8_t*)&cb,
-		                                       sizeof(AllValue_Callback));
-
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(Value_Callback));
 		is_buffered = false;
 
 		return true;
-	}
-	else {
+	} else {
 		is_buffered = true;
 	}
 
