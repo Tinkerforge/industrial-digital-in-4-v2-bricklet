@@ -1,5 +1,5 @@
 /* industrial-digital-in-4-v2-bricklet
- * Copyright (C) 2018 Ishraq Ibne Ashraf <ishraq@tinkerforge.com>
+ * Copyright (C) 2020 Olaf Lüke <olaf@tinkerforge.com>
  *
  * communication.h: TFP protocol message handling
  *
@@ -34,6 +34,12 @@ void communication_tick(void);
 void communication_init(void);
 
 // Constants
+
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_0 0
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_1 1
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_2 2
+#define INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_3 3
+
 #define INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_RISING 0
 #define INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_FALLING 1
 #define INDUSTRIAL_DIGITAL_IN_4_V2_EDGE_TYPE_BOTH 2
@@ -72,9 +78,18 @@ void communication_init(void);
 #define FID_GET_EDGE_COUNT_CONFIGURATION 8
 #define FID_SET_CHANNEL_LED_CONFIG 9
 #define FID_GET_CHANNEL_LED_CONFIG 10
+#define FID_SET_WIEGAND_READER_CONFIG 13
+#define FID_GET_WIEGAND_READER_CONFIG 14
+#define FID_READ_WIEGAND_DATA_LOW_LEVEL 15
+#define FID_SET_WIEGAND_CALLBACK_CONFIG 16
+#define FID_GET_WIEGAND_CALLBACK_CONFIG 17
+#define FID_GET_WIEGAND_ERROR_COUNT 18
 
 #define FID_CALLBACK_VALUE 11
 #define FID_CALLBACK_ALL_VALUE 12
+#define FID_CALLBACK_WIEGAND_DATA_LOW_LEVEL 19
+#define FID_CALLBACK_WIEGAND_DATA_AVAILABLE 20
+#define FID_CALLBACK_WIEGAND_ERROR_COUNT 21
 
 typedef struct {
 	TFPMessageHeader header;
@@ -150,13 +165,13 @@ typedef struct {
 
 typedef struct {
 	TFPMessageHeader header;
-	uint8_t led;
+	uint8_t channel;
 	uint8_t config;
 } __attribute__((__packed__)) SetChannelLEDConfig;
 
 typedef struct {
 	TFPMessageHeader header;
-	uint8_t led;
+	uint8_t channel;
 } __attribute__((__packed__)) GetChannelLEDConfig;
 
 typedef struct {
@@ -177,6 +192,79 @@ typedef struct {
 	uint8_t value;
 } __attribute__((__packed__)) AllValue_Callback;
 
+typedef struct {
+	TFPMessageHeader header;
+	bool reader_enabled;
+	uint16_t bit_count;
+	uint32_t bit_timeout;
+} __attribute__((__packed__)) SetWiegandReaderConfig;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetWiegandReaderConfig;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool reader_enabled;
+	uint16_t bit_count;
+	uint32_t bit_timeout;
+} __attribute__((__packed__)) GetWiegandReaderConfig_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) ReadWiegandDataLowLevel;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t data_length;
+	uint8_t data_data[32];
+} __attribute__((__packed__)) ReadWiegandDataLowLevel_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool data_callback_enabled;
+	bool data_available_callback_enabled;
+	bool error_count_callback_enabled;
+} __attribute__((__packed__)) SetWiegandCallbackConfig;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetWiegandCallbackConfig;
+
+typedef struct {
+	TFPMessageHeader header;
+	bool data_callback_enabled;
+	bool data_available_callback_enabled;
+	bool error_count_callback_enabled;
+} __attribute__((__packed__)) GetWiegandCallbackConfig_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) GetWiegandErrorCount;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t framing_error_count;
+	uint32_t overflow_error_count;
+} __attribute__((__packed__)) GetWiegandErrorCount_Response;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint16_t data_length;
+	uint8_t data_data[32];
+} __attribute__((__packed__)) WiegandDataLowLevel_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
+} __attribute__((__packed__)) WiegandDataAvailable_Callback;
+
+typedef struct {
+	TFPMessageHeader header;
+	uint32_t framing_error_count;
+	uint32_t overflow_error_count;
+} __attribute__((__packed__)) WiegandErrorCount_Callback;
+
+
 // Function prototypes
 BootloaderHandleMessageResponse get_value(const GetValue *data, GetValue_Response *response);
 BootloaderHandleMessageResponse set_value_callback_configuration(const SetValueCallbackConfiguration *data);
@@ -188,15 +276,28 @@ BootloaderHandleMessageResponse set_edge_count_configuration(const SetEdgeCountC
 BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountConfiguration *data, GetEdgeCountConfiguration_Response *response);
 BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig *data);
 BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response);
+BootloaderHandleMessageResponse set_wiegand_reader_config(const SetWiegandReaderConfig *data);
+BootloaderHandleMessageResponse get_wiegand_reader_config(const GetWiegandReaderConfig *data, GetWiegandReaderConfig_Response *response);
+BootloaderHandleMessageResponse read_wiegand_data_low_level(const ReadWiegandDataLowLevel *data, ReadWiegandDataLowLevel_Response *response);
+BootloaderHandleMessageResponse set_wiegand_callback_config(const SetWiegandCallbackConfig *data);
+BootloaderHandleMessageResponse get_wiegand_callback_config(const GetWiegandCallbackConfig *data, GetWiegandCallbackConfig_Response *response);
+BootloaderHandleMessageResponse get_wiegand_error_count(const GetWiegandErrorCount *data, GetWiegandErrorCount_Response *response);
 
 // Callbacks
 bool handle_value_callback(void);
 bool handle_all_value_callback(void);
+bool handle_wiegand_data_low_level_callback(void);
+bool handle_wiegand_data_available_callback(void);
+bool handle_wiegand_error_count_callback(void);
 
 #define COMMUNICATION_CALLBACK_TICK_WAIT_MS 1
-#define COMMUNICATION_CALLBACK_HANDLER_NUM 2
+#define COMMUNICATION_CALLBACK_HANDLER_NUM 5
 #define COMMUNICATION_CALLBACK_LIST_INIT \
 	handle_value_callback, \
 	handle_all_value_callback, \
+	handle_wiegand_data_low_level_callback, \
+	handle_wiegand_data_available_callback, \
+	handle_wiegand_error_count_callback, \
+
 
 #endif

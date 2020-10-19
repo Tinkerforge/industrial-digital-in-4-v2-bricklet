@@ -29,6 +29,7 @@
 #include "communication.h"
 
 #include "idi4.h"
+#include "wiegand.h"
 
 int main(void) {
 	logging_init();
@@ -36,9 +37,11 @@ int main(void) {
 
 	communication_init();
 	idi4_init();
+	wiegand_init();
 
 	while(true) {
 		idi4_tick();
+		wiegand_tick();
 		bootloader_tick();
 		communication_tick();
 	}

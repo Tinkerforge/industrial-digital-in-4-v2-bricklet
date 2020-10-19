@@ -27,6 +27,7 @@
 #include "bricklib2/logging/logging.h"
 
 #include "idi4.h"
+#include "wiegand.h"
 
 extern const uint8_t idi4_channel_led_pin[];
 extern XMC_GPIO_PORT_t *const idi4_channel_led_port[];
@@ -43,6 +44,12 @@ BootloaderHandleMessageResponse handle_message(const void *message, void *respon
 		case FID_GET_EDGE_COUNT_CONFIGURATION: return get_edge_count_configuration(message, response);
 		case FID_SET_CHANNEL_LED_CONFIG: return set_channel_led_config(message);
 		case FID_GET_CHANNEL_LED_CONFIG: return get_channel_led_config(message, response);
+		case FID_SET_WIEGAND_READER_CONFIG: return set_wiegand_reader_config(message);
+		case FID_GET_WIEGAND_READER_CONFIG: return get_wiegand_reader_config(message, response);
+		case FID_READ_WIEGAND_DATA_LOW_LEVEL: return read_wiegand_data_low_level(message, response);
+		case FID_SET_WIEGAND_CALLBACK_CONFIG: return set_wiegand_callback_config(message);
+		case FID_GET_WIEGAND_CALLBACK_CONFIG: return get_wiegand_callback_config(message, response);
+		case FID_GET_WIEGAND_ERROR_COUNT: return get_wiegand_error_count(message, response);
 		default: return HANDLE_MESSAGE_RESPONSE_NOT_SUPPORTED;
 	}
 }
@@ -147,7 +154,7 @@ BootloaderHandleMessageResponse get_edge_count_configuration(const GetEdgeCountC
 }
 
 BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig *data) {
-	if(data->led >= IDI4_CHANNEL_NUM) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
@@ -155,24 +162,92 @@ BootloaderHandleMessageResponse set_channel_led_config(const SetChannelLEDConfig
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
 
-	idi4.channel_led_flicker_state[data->led].config = data->config;
+	idi4.channel_led_flicker_state[data->channel].config = data->config;
 	if(data->config == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_OFF) {
-		XMC_GPIO_SetOutputHigh(idi4_channel_led_port[data->led], idi4_channel_led_pin[data->led]);
+		XMC_GPIO_SetOutputHigh(idi4_channel_led_port[data->channel], idi4_channel_led_pin[data->channel]);
 	} else if(data->config == INDUSTRIAL_DIGITAL_IN_4_V2_CHANNEL_LED_CONFIG_ON) {
-		XMC_GPIO_SetOutputLow(idi4_channel_led_port[data->led], idi4_channel_led_pin[data->led]);
+		XMC_GPIO_SetOutputLow(idi4_channel_led_port[data->channel], idi4_channel_led_pin[data->channel]);
 	}
 
 	return HANDLE_MESSAGE_RESPONSE_EMPTY;
 }
 
 BootloaderHandleMessageResponse get_channel_led_config(const GetChannelLEDConfig *data, GetChannelLEDConfig_Response *response) {
-	if(data->led >= IDI4_CHANNEL_NUM) {
+	if(data->channel >= IDI4_CHANNEL_NUM) {
 		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
 	}
-	
 
 	response->header.length = sizeof(GetChannelLEDConfig_Response);
-	response->config        = idi4.channel_led_flicker_state[data->led].config;
+	response->config        = idi4.channel_led_flicker_state[data->channel].config;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_wiegand_reader_config(const SetWiegandReaderConfig *data) {
+	if(data->bit_count > WIEGAND_MAX_BIT_COUNT) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	if((data->bit_timeout == 0) && (data->bit_count == 0)) {
+		return HANDLE_MESSAGE_RESPONSE_INVALID_PARAMETER;
+	}
+
+	wiegand.bit_count   = data->bit_count;
+	wiegand.bit_timeout = data->bit_timeout;
+
+	if(data->reader_enabled) {
+		wiegand_enable();
+	} else {
+		wiegand_disable();
+	}
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_wiegand_reader_config(const GetWiegandReaderConfig *data, GetWiegandReaderConfig_Response *response) {
+	response->header.length  = sizeof(GetWiegandReaderConfig_Response);
+	response->bit_count      = wiegand.bit_count;
+	response->bit_timeout    = wiegand.bit_timeout;
+	response->reader_enabled = wiegand.reader_enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse read_wiegand_data_low_level(const ReadWiegandDataLowLevel *data, ReadWiegandDataLowLevel_Response *response) {
+	response->header.length = sizeof(ReadWiegandDataLowLevel_Response);
+	if(wiegand.out_data_new) {
+		response->data_length = wiegand.out_data_length;
+		memcpy(response->data_data, wiegand.out_data_data, 32);
+		wiegand.out_data_new = false;
+	} else {
+		response->data_length = 0;
+		memset(response->data_data, 0, 32);
+	}
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse set_wiegand_callback_config(const SetWiegandCallbackConfig *data) {
+	wiegand.data_available_callback_enabled = data->data_available_callback_enabled;
+	wiegand.data_callback_enabled           = data->data_callback_enabled;
+	wiegand.error_count_callback_enabled    = data->error_count_callback_enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_EMPTY;
+}
+
+BootloaderHandleMessageResponse get_wiegand_callback_config(const GetWiegandCallbackConfig *data, GetWiegandCallbackConfig_Response *response) {
+	response->header.length                   = sizeof(GetWiegandCallbackConfig_Response);
+	response->data_available_callback_enabled = wiegand.data_available_callback_enabled;
+	response->data_callback_enabled           = wiegand.data_callback_enabled;
+	response->error_count_callback_enabled    = wiegand.error_count_callback_enabled;
+
+	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
+}
+
+BootloaderHandleMessageResponse get_wiegand_error_count(const GetWiegandErrorCount *data, GetWiegandErrorCount_Response *response) {
+	response->header.length        = sizeof(GetWiegandErrorCount_Response);
+	response->framing_error_count  = wiegand.framing_error_count;
+	response->overflow_error_count = wiegand.overflow_error_count;
 
 	return HANDLE_MESSAGE_RESPONSE_NEW_MESSAGE;
 }
@@ -209,6 +284,8 @@ bool handle_value_callback_channel(const uint8_t channel) {
 	return false;
 }
 
+
+
 bool handle_value_callback(void) {
 	static uint8_t channel = 0;
 
@@ -238,7 +315,7 @@ bool handle_all_value_callback(void) {
 		if(idi4.cb_all_has_to_change && (changed == 0)) {
 			return false;
 		}
-			
+
 		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(Value_Callback), FID_CALLBACK_VALUE);
 		cb.changed = changed;
 		cb.value   = value;
@@ -255,6 +332,93 @@ bool handle_all_value_callback(void) {
 
 	return false;
 }
+
+bool handle_wiegand_data_low_level_callback(void) {
+	static bool is_buffered = false;
+	static WiegandDataLowLevel_Callback cb;
+
+	if(!is_buffered) {
+		if(!wiegand.out_data_new_cb) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(WiegandDataLowLevel_Callback), FID_CALLBACK_WIEGAND_DATA_LOW_LEVEL);
+		cb.data_length = wiegand.out_data_length_cb;
+		memcpy(cb.data_data, wiegand.out_data_data_cb, 32);
+
+		wiegand.out_data_new_cb = false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(WiegandDataLowLevel_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
+bool handle_wiegand_data_available_callback(void) {
+	static bool is_buffered = false;
+	static WiegandDataAvailable_Callback cb;
+
+	if(!is_buffered) {
+		if(!wiegand.out_data_available) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(WiegandDataAvailable_Callback), FID_CALLBACK_WIEGAND_DATA_AVAILABLE);
+		wiegand.out_data_available = false;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(WiegandDataAvailable_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
+bool handle_wiegand_error_count_callback(void) {
+	static bool is_buffered = false;
+	static WiegandErrorCount_Callback cb;
+
+	static uint32_t last_framing_error_count  = 0;
+	static uint32_t last_overflow_error_count = 0;
+
+	if(!is_buffered) {
+		if(!wiegand.error_count_callback_enabled) {
+			return false;
+		}
+
+		if((last_framing_error_count == wiegand.framing_error_count) && (last_overflow_error_count == wiegand.overflow_error_count)) {
+			return false;
+		}
+
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(WiegandErrorCount_Callback), FID_CALLBACK_WIEGAND_ERROR_COUNT);
+		cb.framing_error_count    = wiegand.framing_error_count;
+		cb.overflow_error_count   = wiegand.overflow_error_count;
+
+		last_framing_error_count  = wiegand.framing_error_count;
+		last_overflow_error_count = wiegand.overflow_error_count;
+	}
+
+	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(WiegandErrorCount_Callback));
+		is_buffered = false;
+		return true;
+	} else {
+		is_buffered = true;
+	}
+
+	return false;
+}
+
 
 void communication_tick(void) {
 	communication_callback_tick();

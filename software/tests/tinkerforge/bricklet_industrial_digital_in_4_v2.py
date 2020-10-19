@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 #############################################################
-# This file was automatically generated on 2018-04-11.      #
+# This file was automatically generated on 2020-10-19.      #
 #                                                           #
-# Python Bindings Version 2.1.16                            #
+# Python Bindings Version 2.1.26                            #
 #                                                           #
 # If you have a bugfix for this file and want to commit it, #
 # please fix the bug in the generator. You can find a link  #
 # to the generators git repository on tinkerforge.com       #
 #############################################################
-
-#### __DEVICE_IS_NOT_RELEASED__ ####
 
 from collections import namedtuple
 
@@ -18,9 +16,13 @@ try:
 except ValueError:
     from ip_connection import Device, IPConnection, Error, create_char, create_char_list, create_string, create_chunk_data
 
-GetInputValueCallbackConfiguration = namedtuple('InputValueCallbackConfiguration', ['period', 'value_has_to_change'])
-GetAllInputValueCallbackConfiguration = namedtuple('AllInputValueCallbackConfiguration', ['period', 'value_has_to_change'])
+GetValueCallbackConfiguration = namedtuple('ValueCallbackConfiguration', ['period', 'value_has_to_change'])
+GetAllValueCallbackConfiguration = namedtuple('AllValueCallbackConfiguration', ['period', 'value_has_to_change'])
 GetEdgeCountConfiguration = namedtuple('EdgeCountConfiguration', ['edge_type', 'debounce'])
+GetWiegandReaderConfig = namedtuple('WiegandReaderConfig', ['reader_enabled', 'bit_count', 'bit_timeout'])
+ReadWiegandDataLowLevel = namedtuple('ReadWiegandDataLowLevel', ['data_length', 'data_data'])
+GetWiegandCallbackConfig = namedtuple('WiegandCallbackConfig', ['data_callback_enabled', 'data_available_callback_enabled', 'error_count_callback_enabled'])
+GetWiegandErrorCount = namedtuple('WiegandErrorCount', ['framing_error_count', 'overflow_error_count'])
 GetSPITFPErrorCount = namedtuple('SPITFPErrorCount', ['error_count_ack_checksum', 'error_count_message_checksum', 'error_count_frame', 'error_count_overflow'])
 GetIdentity = namedtuple('Identity', ['uid', 'connected_uid', 'position', 'hardware_version', 'firmware_version', 'device_identifier'])
 
@@ -33,21 +35,30 @@ class BrickletIndustrialDigitalIn4V2(Device):
     DEVICE_DISPLAY_NAME = 'Industrial Digital In 4 Bricklet 2.0'
     DEVICE_URL_PART = 'industrial_digital_in_4_v2' # internal
 
-    CALLBACK_INPUT_VALUE = 12
-    CALLBACK_ALL_INPUT_VALUE = 13
+    CALLBACK_VALUE = 11
+    CALLBACK_ALL_VALUE = 12
+    CALLBACK_WIEGAND_DATA_LOW_LEVEL = 19
+    CALLBACK_WIEGAND_DATA_AVAILABLE = 20
+    CALLBACK_WIEGAND_ERROR_COUNT = 21
 
+    CALLBACK_WIEGAND_DATA = -19
 
     FUNCTION_GET_VALUE = 1
-    FUNCTION_GET_SELECTED_VALUE = 2
-    FUNCTION_SET_INPUT_VALUE_CALLBACK_CONFIGURATION = 3
-    FUNCTION_GET_INPUT_VALUE_CALLBACK_CONFIGURATION = 4
-    FUNCTION_SET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION = 5
-    FUNCTION_GET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION = 6
-    FUNCTION_GET_EDGE_COUNT = 7
-    FUNCTION_SET_EDGE_COUNT_CONFIGURATION = 8
-    FUNCTION_GET_EDGE_COUNT_CONFIGURATION = 9
-    FUNCTION_SET_INFO_LED_CONFIG = 10
-    FUNCTION_GET_INFO_LED_CONFIG = 11
+    FUNCTION_SET_VALUE_CALLBACK_CONFIGURATION = 2
+    FUNCTION_GET_VALUE_CALLBACK_CONFIGURATION = 3
+    FUNCTION_SET_ALL_VALUE_CALLBACK_CONFIGURATION = 4
+    FUNCTION_GET_ALL_VALUE_CALLBACK_CONFIGURATION = 5
+    FUNCTION_GET_EDGE_COUNT = 6
+    FUNCTION_SET_EDGE_COUNT_CONFIGURATION = 7
+    FUNCTION_GET_EDGE_COUNT_CONFIGURATION = 8
+    FUNCTION_SET_CHANNEL_LED_CONFIG = 9
+    FUNCTION_GET_CHANNEL_LED_CONFIG = 10
+    FUNCTION_SET_WIEGAND_READER_CONFIG = 13
+    FUNCTION_GET_WIEGAND_READER_CONFIG = 14
+    FUNCTION_READ_WIEGAND_DATA_LOW_LEVEL = 15
+    FUNCTION_SET_WIEGAND_CALLBACK_CONFIG = 16
+    FUNCTION_GET_WIEGAND_CALLBACK_CONFIG = 17
+    FUNCTION_GET_WIEGAND_ERROR_COUNT = 18
     FUNCTION_GET_SPITFP_ERROR_COUNT = 234
     FUNCTION_SET_BOOTLOADER_MODE = 235
     FUNCTION_GET_BOOTLOADER_MODE = 236
@@ -61,13 +72,17 @@ class BrickletIndustrialDigitalIn4V2(Device):
     FUNCTION_READ_UID = 249
     FUNCTION_GET_IDENTITY = 255
 
+    CHANNEL_0 = 0
+    CHANNEL_1 = 1
+    CHANNEL_2 = 2
+    CHANNEL_3 = 3
     EDGE_TYPE_RISING = 0
     EDGE_TYPE_FALLING = 1
     EDGE_TYPE_BOTH = 2
-    INFO_LED_CONFIG_OFF = 0
-    INFO_LED_CONFIG_ON = 1
-    INFO_LED_CONFIG_SHOW_HEARTBEAT = 2
-    INFO_LED_CONFIG_SHOW_CHANNEL_STATUS = 3
+    CHANNEL_LED_CONFIG_OFF = 0
+    CHANNEL_LED_CONFIG_ON = 1
+    CHANNEL_LED_CONFIG_SHOW_HEARTBEAT = 2
+    CHANNEL_LED_CONFIG_SHOW_CHANNEL_STATUS = 3
     BOOTLOADER_MODE_BOOTLOADER = 0
     BOOTLOADER_MODE_FIRMWARE = 1
     BOOTLOADER_MODE_BOOTLOADER_WAIT_FOR_REBOOT = 2
@@ -89,21 +104,26 @@ class BrickletIndustrialDigitalIn4V2(Device):
         Creates an object with the unique device ID *uid* and adds it to
         the IP Connection *ipcon*.
         """
-        Device.__init__(self, uid, ipcon)
+        Device.__init__(self, uid, ipcon, BrickletIndustrialDigitalIn4V2.DEVICE_IDENTIFIER, BrickletIndustrialDigitalIn4V2.DEVICE_DISPLAY_NAME)
 
-        self.api_version = (2, 0, 0)
+        self.api_version = (2, 0, 1)
 
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_VALUE] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_SELECTED_VALUE] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_INPUT_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_INPUT_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_ALL_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_ALL_VALUE_CALLBACK_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_EDGE_COUNT_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_FALSE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT_CONFIGURATION] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_INFO_LED_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_FALSE
-        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_INFO_LED_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_CHANNEL_LED_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_CHANNEL_LED_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WIEGAND_READER_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_FALSE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_READER_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_READ_WIEGAND_DATA_LOW_LEVEL] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WIEGAND_CALLBACK_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_CALLBACK_CONFIG] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
+        self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_ERROR_COUNT] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_SPITFP_ERROR_COUNT] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_SET_BOOTLOADER_MODE] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_BOOTLOADER_MODE] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
@@ -117,57 +137,83 @@ class BrickletIndustrialDigitalIn4V2(Device):
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_READ_UID] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
         self.response_expected[BrickletIndustrialDigitalIn4V2.FUNCTION_GET_IDENTITY] = BrickletIndustrialDigitalIn4V2.RESPONSE_EXPECTED_ALWAYS_TRUE
 
-        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_INPUT_VALUE] = 'B ! !'
-        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_ALL_INPUT_VALUE] = '4! 4!'
+        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_VALUE] = (11, 'B ! !')
+        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_ALL_VALUE] = (10, '4! 4!')
+        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_WIEGAND_DATA_LOW_LEVEL] = (42, 'H 256!')
+        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_WIEGAND_DATA_AVAILABLE] = (8, '')
+        self.callback_formats[BrickletIndustrialDigitalIn4V2.CALLBACK_WIEGAND_ERROR_COUNT] = (16, 'I I')
 
+        self.high_level_callbacks[BrickletIndustrialDigitalIn4V2.CALLBACK_WIEGAND_DATA] = [('stream_length', 'stream_chunk_data'), {'fixed_length': None, 'single_chunk': True}, None]
+        ipcon.add_device(self)
 
     def get_value(self):
         """
-        Returns the input value as bools, *true*
-        refers to high and *false* refers to low.
+        Returns the input value as bools, *true* refers to high and *false* refers to low.
         """
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_VALUE, (), '', '4!')
+        self.check_validity()
 
-    def get_selected_value(self, channel):
-        """
-        Returns the logic levels that are currently measured on a specific channel.
-        """
-        channel = int(channel)
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_VALUE, (), '', 9, '4!')
 
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_SELECTED_VALUE, (channel,), 'B', '!')
-
-    def set_input_value_callback_configuration(self, channel, period, value_has_to_change):
+    def set_value_callback_configuration(self, channel, period, value_has_to_change):
         """
+        This callback can be configured per channel.
 
+        The period is the period with which the :cb:`Value`
+        callback is triggered periodically. A value of 0 turns the callback off.
+
+        If the `value has to change`-parameter is set to true, the callback is only
+        triggered after the value has changed. If the value didn't change within the
+        period, the callback is triggered immediately on change.
+
+        If it is set to false, the callback is continuously triggered with the period,
+        independent of the value.
         """
+        self.check_validity()
+
         channel = int(channel)
         period = int(period)
         value_has_to_change = bool(value_has_to_change)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_INPUT_VALUE_CALLBACK_CONFIGURATION, (channel, period, value_has_to_change), 'B I !', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_VALUE_CALLBACK_CONFIGURATION, (channel, period, value_has_to_change), 'B I !', 0, '')
 
-    def get_input_value_callback_configuration(self, channel):
+    def get_value_callback_configuration(self, channel):
         """
+        Returns the callback configuration for the given channel as set by
+        :func:`Set Value Callback Configuration`.
+        """
+        self.check_validity()
 
-        """
         channel = int(channel)
 
-        return GetInputValueCallbackConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_INPUT_VALUE_CALLBACK_CONFIGURATION, (channel,), 'B', 'I !'))
+        return GetValueCallbackConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_VALUE_CALLBACK_CONFIGURATION, (channel,), 'B', 13, 'I !'))
 
-    def set_all_input_value_callback_configuration(self, period, value_has_to_change):
+    def set_all_value_callback_configuration(self, period, value_has_to_change):
         """
+        The period is the period with which the :cb:`All Value`
+        callback is triggered periodically. A value of 0 turns the callback off.
 
+        If the `value has to change`-parameter is set to true, the callback is only
+        triggered after the value has changed. If the value didn't change within the
+        period, the callback is triggered immediately on change.
+
+        If it is set to false, the callback is continuously triggered with the period,
+        independent of the value.
         """
+        self.check_validity()
+
         period = int(period)
         value_has_to_change = bool(value_has_to_change)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION, (period, value_has_to_change), 'I !', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_ALL_VALUE_CALLBACK_CONFIGURATION, (period, value_has_to_change), 'I !', 0, '')
 
-    def get_all_input_value_callback_configuration(self):
+    def get_all_value_callback_configuration(self):
         """
+        Returns the callback configuration as set by
+        :func:`Set All Value Callback Configuration`.
+        """
+        self.check_validity()
 
-        """
-        return GetAllInputValueCallbackConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_ALL_INPUT_VALUE_CALLBACK_CONFIGURATION, (), '', 'I !'))
+        return GetAllValueCallbackConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_ALL_VALUE_CALLBACK_CONFIGURATION, (), '', 13, 'I !'))
 
     def get_edge_count(self, channel, reset_counter):
         """
@@ -177,64 +223,136 @@ class BrickletIndustrialDigitalIn4V2(Device):
         If you set the reset counter to *true*, the count is set back to 0
         directly after it is read.
         """
+        self.check_validity()
+
         channel = int(channel)
         reset_counter = bool(reset_counter)
 
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT, (channel, reset_counter), 'B !', 'I')
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT, (channel, reset_counter), 'B !', 12, 'I')
 
     def set_edge_count_configuration(self, channel, edge_type, debounce):
         """
         Configures the edge counter for a specific channel.
 
-        The edge type parameter configures if rising edges, falling edges or
-        both are counted if the channel is configured for input. Possible edge types are:
+        The edge type parameter configures if rising edges, falling edges or both are
+        counted. Possible edge types are:
 
-        * 0 = rising (default)
+        * 0 = rising
         * 1 = falling
         * 2 = both
-
-        The debounce time is given in ms.
 
         Configuring an edge counter resets its value to 0.
 
         If you don't know what any of this means, just leave it at default. The
         default configuration is very likely OK for you.
-
-        Default values: 0 (edge type) and 100ms (debounce time)
         """
+        self.check_validity()
+
         channel = int(channel)
         edge_type = int(edge_type)
         debounce = int(debounce)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_EDGE_COUNT_CONFIGURATION, (channel, edge_type, debounce), 'B B B', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_EDGE_COUNT_CONFIGURATION, (channel, edge_type, debounce), 'B B B', 0, '')
 
     def get_edge_count_configuration(self, channel):
         """
         Returns the edge type and debounce time for the selected channel as set by
         :func:`Set Edge Count Configuration`.
-
-        .. versionadded:: 2.0.1$nbsp;(Plugin)
         """
+        self.check_validity()
+
         channel = int(channel)
 
-        return GetEdgeCountConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT_CONFIGURATION, (channel,), 'B', 'B B'))
+        return GetEdgeCountConfiguration(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_EDGE_COUNT_CONFIGURATION, (channel,), 'B', 10, 'B B'))
 
-    def set_info_led_config(self, led, config):
+    def set_channel_led_config(self, channel, config):
         """
+        Each channel has a corresponding LED. You can turn the LED off, on or show a
+        heartbeat. You can also set the LED to "Channel Status". In this mode the
+        LED is on if the channel is high and off otherwise.
 
+        By default all channel LEDs are configured as "Channel Status".
         """
-        led = int(led)
+        self.check_validity()
+
+        channel = int(channel)
         config = int(config)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_INFO_LED_CONFIG, (led, config), 'B B', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_CHANNEL_LED_CONFIG, (channel, config), 'B B', 0, '')
 
-    def get_info_led_config(self, led):
+    def get_channel_led_config(self, channel):
         """
-        Returns the Info LED configuration as set by :func:`Set Info LED Config`
+        Returns the channel LED configuration as set by :func:`Set Channel LED Config`
         """
-        led = int(led)
+        self.check_validity()
 
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_INFO_LED_CONFIG, (led,), 'B', 'B')
+        channel = int(channel)
+
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_CHANNEL_LED_CONFIG, (channel,), 'B', 9, 'B')
+
+    def set_wiegand_reader_config(self, reader_enabled, bit_count, bit_timeout):
+        """
+        TBD
+
+        .. versionadded:: 2.0.3$nbsp;(Plugin)
+        """
+        self.check_validity()
+
+        reader_enabled = bool(reader_enabled)
+        bit_count = int(bit_count)
+        bit_timeout = int(bit_timeout)
+
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WIEGAND_READER_CONFIG, (reader_enabled, bit_count, bit_timeout), '! H I', 0, '')
+
+    def get_wiegand_reader_config(self):
+        """
+        TBD
+
+        .. versionadded:: 2.0.3$nbsp;(Plugin)
+        """
+        self.check_validity()
+
+        return GetWiegandReaderConfig(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_READER_CONFIG, (), '', 15, '! H I'))
+
+    def read_wiegand_data_low_level(self):
+        """
+        TBD
+        """
+        self.check_validity()
+
+        return ReadWiegandDataLowLevel(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_READ_WIEGAND_DATA_LOW_LEVEL, (), '', 42, 'H 256!'))
+
+    def set_wiegand_callback_config(self, data_callback_enabled, data_available_callback_enabled, error_count_callback_enabled):
+        """
+        TBD
+
+        .. versionadded:: 2.0.3$nbsp;(Plugin)
+        """
+        self.check_validity()
+
+        data_callback_enabled = bool(data_callback_enabled)
+        data_available_callback_enabled = bool(data_available_callback_enabled)
+        error_count_callback_enabled = bool(error_count_callback_enabled)
+
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WIEGAND_CALLBACK_CONFIG, (data_callback_enabled, data_available_callback_enabled, error_count_callback_enabled), '! ! !', 0, '')
+
+    def get_wiegand_callback_config(self):
+        """
+        TBD
+
+        .. versionadded:: 2.0.3$nbsp;(Plugin)
+        """
+        self.check_validity()
+
+        return GetWiegandCallbackConfig(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_CALLBACK_CONFIG, (), '', 11, '! ! !'))
+
+    def get_wiegand_error_count(self):
+        """
+        TBD
+        """
+        self.check_validity()
+
+        return GetWiegandErrorCount(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_WIEGAND_ERROR_COUNT, (), '', 16, 'I I'))
 
     def get_spitfp_error_count(self):
         """
@@ -242,15 +360,17 @@ class BrickletIndustrialDigitalIn4V2(Device):
 
         The errors are divided into
 
-        * ack checksum errors,
+        * ACK checksum errors,
         * message checksum errors,
-        * frameing errors and
+        * framing errors and
         * overflow errors.
 
         The errors counts are for errors that occur on the Bricklet side. All
         Bricks have a similar function that returns the errors on the Brick side.
         """
-        return GetSPITFPErrorCount(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_SPITFP_ERROR_COUNT, (), '', 'I I I I'))
+        self.check_validity()
+
+        return GetSPITFPErrorCount(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_SPITFP_ERROR_COUNT, (), '', 24, 'I I I I'))
 
     def set_bootloader_mode(self, mode):
         """
@@ -259,20 +379,24 @@ class BrickletIndustrialDigitalIn4V2(Device):
 
         You can change from bootloader mode to firmware mode and vice versa. A change
         from bootloader mode to firmware mode will only take place if the entry function,
-        device identifier und crc are present and correct.
+        device identifier and CRC are present and correct.
 
         This function is used by Brick Viewer during flashing. It should not be
         necessary to call it in a normal user program.
         """
+        self.check_validity()
+
         mode = int(mode)
 
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_BOOTLOADER_MODE, (mode,), 'B', 'B')
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_BOOTLOADER_MODE, (mode,), 'B', 9, 'B')
 
     def get_bootloader_mode(self):
         """
         Returns the current bootloader mode, see :func:`Set Bootloader Mode`.
         """
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_BOOTLOADER_MODE, (), '', 'B')
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_BOOTLOADER_MODE, (), '', 9, 'B')
 
     def set_write_firmware_pointer(self, pointer):
         """
@@ -283,9 +407,11 @@ class BrickletIndustrialDigitalIn4V2(Device):
         This function is used by Brick Viewer during flashing. It should not be
         necessary to call it in a normal user program.
         """
+        self.check_validity()
+
         pointer = int(pointer)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WRITE_FIRMWARE_POINTER, (pointer,), 'I', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_WRITE_FIRMWARE_POINTER, (pointer,), 'I', 0, '')
 
     def write_firmware(self, data):
         """
@@ -298,9 +424,11 @@ class BrickletIndustrialDigitalIn4V2(Device):
         This function is used by Brick Viewer during flashing. It should not be
         necessary to call it in a normal user program.
         """
+        self.check_validity()
+
         data = list(map(int, data))
 
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_WRITE_FIRMWARE, (data,), '64B', 'B')
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_WRITE_FIRMWARE, (data,), '64B', 9, 'B')
 
     def set_status_led_config(self, config):
         """
@@ -312,26 +440,32 @@ class BrickletIndustrialDigitalIn4V2(Device):
 
         If the Bricklet is in bootloader mode, the LED is will show heartbeat by default.
         """
+        self.check_validity()
+
         config = int(config)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_STATUS_LED_CONFIG, (config,), 'B', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_SET_STATUS_LED_CONFIG, (config,), 'B', 0, '')
 
     def get_status_led_config(self):
         """
         Returns the configuration as set by :func:`Set Status LED Config`
         """
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_STATUS_LED_CONFIG, (), '', 'B')
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_STATUS_LED_CONFIG, (), '', 9, 'B')
 
     def get_chip_temperature(self):
         """
-        Returns the temperature in °C as measured inside the microcontroller. The
+        Returns the temperature as measured inside the microcontroller. The
         value returned is not the ambient temperature!
 
         The temperature is only proportional to the real temperature and it has bad
         accuracy. Practically it is only useful as an indicator for
         temperature changes.
         """
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_CHIP_TEMPERATURE, (), '', 'h')
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_CHIP_TEMPERATURE, (), '', 10, 'h')
 
     def reset(self):
         """
@@ -342,7 +476,9 @@ class BrickletIndustrialDigitalIn4V2(Device):
         calling functions on the existing ones will result in
         undefined behavior!
         """
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_RESET, (), '', '')
+        self.check_validity()
+
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_RESET, (), '', 0, '')
 
     def write_uid(self, uid):
         """
@@ -352,16 +488,20 @@ class BrickletIndustrialDigitalIn4V2(Device):
 
         We recommend that you use Brick Viewer to change the UID.
         """
+        self.check_validity()
+
         uid = int(uid)
 
-        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_WRITE_UID, (uid,), 'I', '')
+        self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_WRITE_UID, (uid,), 'I', 0, '')
 
     def read_uid(self):
         """
         Returns the current UID as an integer. Encode as
         Base58 to get the usual string version.
         """
-        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_READ_UID, (), '', 'I')
+        self.check_validity()
+
+        return self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_READ_UID, (), '', 12, 'I')
 
     def get_identity(self):
         """
@@ -369,12 +509,22 @@ class BrickletIndustrialDigitalIn4V2(Device):
         the position, the hardware and firmware version as well as the
         device identifier.
 
-        The position can be 'a', 'b', 'c' or 'd'.
+        The position can be 'a', 'b', 'c', 'd', 'e', 'f', 'g' or 'h' (Bricklet Port).
+        A Bricklet connected to an :ref:`Isolator Bricklet <isolator_bricklet>` is always as
+        position 'z'.
 
         The device identifier numbers can be found :ref:`here <device_identifier>`.
         |device_identifier_constant|
         """
-        return GetIdentity(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_IDENTITY, (), '', '8s 8s c 3B 3B H'))
+        return GetIdentity(*self.ipcon.send_request(self, BrickletIndustrialDigitalIn4V2.FUNCTION_GET_IDENTITY, (), '', 33, '8s 8s c 3B 3B H'))
+
+    def read_wiegand_data(self):
+        """
+        TBD
+        """
+        ret = self.read_wiegand_data_low_level()
+
+        return ret.data_data[:ret.data_length]
 
     def register_callback(self, callback_id, function):
         """
