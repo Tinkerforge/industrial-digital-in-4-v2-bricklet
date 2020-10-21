@@ -316,13 +316,13 @@ bool handle_all_value_callback(void) {
 			return false;
 		}
 
-		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(Value_Callback), FID_CALLBACK_VALUE);
+		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(AllValue_Callback), FID_CALLBACK_ALL_VALUE);
 		cb.changed = changed;
 		cb.value   = value;
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
-		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(Value_Callback));
+		bootloader_spitfp_send_ack_and_message(&bootloader_status, (uint8_t*)&cb, sizeof(AllValue_Callback));
 		is_buffered = false;
 
 		return true;
