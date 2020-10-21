@@ -265,11 +265,14 @@ bool handle_value_callback_channel(const uint8_t channel) {
 		if(idi4.cb_value_has_to_change[channel] && !changed) {
 			return false;
 		}
-			
+
 		tfp_make_default_header(&cb[channel].header, bootloader_get_uid(), sizeof(Value_Callback), FID_CALLBACK_VALUE);
 		cb[channel].channel = channel;
 		cb[channel].changed = changed;
 		cb[channel].value   = idi4.channel_value[channel];
+
+		idi4.cb_value_last_value[channel] = idi4.channel_value[channel];
+		idi4.cb_value_last_time[channel]  = system_timer_get_ms();
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
@@ -319,6 +322,9 @@ bool handle_all_value_callback(void) {
 		tfp_make_default_header(&cb.header, bootloader_get_uid(), sizeof(AllValue_Callback), FID_CALLBACK_ALL_VALUE);
 		cb.changed = changed;
 		cb.value   = value;
+
+		idi4.cb_all_last_value = value;
+		idi4.cb_all_last_time  = system_timer_get_ms();
 	}
 
 	if(bootloader_spitfp_is_send_possible(&bootloader_status.st)) {
