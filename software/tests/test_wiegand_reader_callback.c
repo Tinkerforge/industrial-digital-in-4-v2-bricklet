@@ -9,7 +9,7 @@
 
 void interpret_wiegand26_data(bool *data, uint16_t data_length) {
     if (data_length != 26) {
-        printf("Bad length: %u\n", data_length);
+        printf("Bad Length %u\n", data_length);
         return;
     }
 

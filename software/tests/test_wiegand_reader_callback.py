@@ -10,7 +10,7 @@ from tinkerforge.bricklet_industrial_digital_in_4_v2 import BrickletIndustrialDi
 
 def interpret_wiegand26_data(data):
     if len(data) != 26:
-        print('Bad length: {0}'.format(len(data)))
+        print('Bad Length {0}'.format(len(data)))
         return
 
     pe = 0
