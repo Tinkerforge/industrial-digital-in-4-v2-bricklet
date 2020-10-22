@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "ip_connection.h"
-#include "bricklet_industrial_digital_in_4_v2.h"
+#include "tinkerforge/ip_connection.h"
+#include "tinkerforge/bricklet_industrial_digital_in_4_v2.h"
 
 #define HOST "localhost"
 #define PORT 4223
