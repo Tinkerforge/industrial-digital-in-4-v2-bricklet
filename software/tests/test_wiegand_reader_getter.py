@@ -14,6 +14,18 @@ def interpret_wiegand26_data(data):
         print('Bad length: {0}'.format(len(data)))
         return
 
+    pe = 0
+    for i in range(0, 13):
+        pe = pe ^ data[i]
+
+    po = 0
+    for i in range(13, 26):
+        po = po ^ data[i]
+
+    if pe != 0 or po != 1:
+        print('Paritiy Error')
+        return
+
     fc = 0
     for i in range(1, 9):
         fc = fc << 1
@@ -26,11 +38,8 @@ def interpret_wiegand26_data(data):
 
     print('Facility Code {0}, Card Code {1}'.format(fc, cc))
 
-
-def cb_wiegand_data_available():
-    data = idi.read_wiegand_data()
-    if len(data) > 0:
-        interpret_wiegand26_data(data)
+def cb_wiegand_error_count(framing_error_count, overflow_error_count):
+    print('Framing Error Count {0}, Overflow Error Count {1}'.format(framing_error_count, overflow_error_count))
 
 if __name__ == "__main__":
     ipcon = IPConnection() # Create IP connection
@@ -39,16 +48,18 @@ if __name__ == "__main__":
     ipcon.connect(HOST, PORT) # Connect to brickd
     # Don't use device before ipcon is connected
 
-    idi.set_wiegand_reader_config(True, 26, 50)
+    idi.register_callback(idi.CALLBACK_WIEGAND_ERROR_COUNT, cb_wiegand_error_count)
 
-    idi.set_wiegand_callback_config(False, True, False)
-    idi.register_callback(idi.CALLBACK_WIEGAND_DATA_AVAILABLE, cb_wiegand_data_available)
+    idi.set_wiegand_reader_config(True, 26, 50) # 26 bit, with 50 ms timeout
+    idi.set_wiegand_callback_config(False, False, True)
 
-#    while True:
-#        time.sleep(0.1)
-#        data = idi.read_wiegand_data()
-#        if len(data) > 0:
-#            interpret_wiegand26_data(data)
+    while True:
+        time.sleep(0.1)
 
-    input("Press key to exit\n") # Use input() in Python 3
+        data = idi.read_wiegand_data()
+
+        if len(data) > 0:
+            interpret_wiegand26_data(data)
+
+    input("Press key to exit\n")
     ipcon.disconnect()

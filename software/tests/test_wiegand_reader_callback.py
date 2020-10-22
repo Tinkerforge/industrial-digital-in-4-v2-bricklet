@@ -5,13 +5,24 @@ HOST = "localhost"
 PORT = 4223
 UID = "HXg"
 
-import time
 from tinkerforge.ip_connection import IPConnection
 from tinkerforge.bricklet_industrial_digital_in_4_v2 import BrickletIndustrialDigitalIn4V2
 
 def interpret_wiegand26_data(data):
     if len(data) != 26:
         print('Bad length: {0}'.format(len(data)))
+        return
+
+    pe = 0
+    for i in range(0, 13):
+        pe = pe ^ data[i]
+
+    po = 0
+    for i in range(13, 26):
+        po = po ^ data[i]
+
+    if pe != 0 or po != 1:
+        print('Paritiy Error')
         return
 
     fc = 0
@@ -39,11 +50,11 @@ if __name__ == "__main__":
     ipcon.connect(HOST, PORT) # Connect to brickd
     # Don't use device before ipcon is connected
 
-    idi.set_wiegand_reader_config(True, 26, 50)
-    idi.set_wiegand_callback_config(True, True, True)
-
     idi.register_callback(idi.CALLBACK_WIEGAND_DATA, cb_wiegand_data)
     idi.register_callback(idi.CALLBACK_WIEGAND_ERROR_COUNT, cb_wiegand_error_count)
+
+    idi.set_wiegand_reader_config(True, 26, 50) # 26 bit, with 50 ms timeout
+    idi.set_wiegand_callback_config(True, False, True)
 
     input("Press key to exit\n")
     ipcon.disconnect()
