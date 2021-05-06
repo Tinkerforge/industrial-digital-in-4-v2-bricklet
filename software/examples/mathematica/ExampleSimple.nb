@@ -19,12 +19,13 @@ Notebook[{
    RowBox[{"
 "}],
    RowBox[{"(*", "Get current value", "*)"}],
+   RowBox[{"value", "=", "idi4", "@", RowBox[{"GetValue", "[", "]"}]}],
    RowBox[{"
 "}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Channel 0: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "1"}], "]"}]}], "]"}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Channel 1: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "2"}], "]"}]}], "]"}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Channel 2: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "3"}], "]"}]}], "]"}],
-   RowBox[{"Print", "[", RowBox[{"\"\<Channel 3: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"idi4", "@", RowBox[{"GetValue", "[", "]"}], "4"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 0: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"value", "[", RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 1: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"value", "[", RowBox[{"[", "2", "]"}], "]"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 2: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"value", "[", RowBox[{"[", "3", "]"}], "]"}], "]"}]}], "]"}],
+   RowBox[{"Print", "[", RowBox[{"\"\<Channel 3: \>\"", "<>", RowBox[{"ToString", "[", RowBox[{"value", "[", RowBox[{"[", "4", "]"}], "]"}], "]"}]}], "]"}],
    RowBox[{"
 "}],
    RowBox[{"(*", "Clean up", "*)"}],

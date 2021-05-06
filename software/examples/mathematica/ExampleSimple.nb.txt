@@ -11,11 +11,12 @@ idi4=NETNew["Tinkerforge.BrickletIndustrialDigitalIn4V2",uid,ipcon]
 ipcon@Connect[host,port]
 
 (*Get current value*)
+value=idi4@GetValue[]
 
-Print["Channel 0: "<>ToString[idi4@GetValue[]1]]
-Print["Channel 1: "<>ToString[idi4@GetValue[]2]]
-Print["Channel 2: "<>ToString[idi4@GetValue[]3]]
-Print["Channel 3: "<>ToString[idi4@GetValue[]4]]
+Print["Channel 0: "<>ToString[value[[1]]]]
+Print["Channel 1: "<>ToString[value[[2]]]]
+Print["Channel 2: "<>ToString[value[[3]]]]
+Print["Channel 3: "<>ToString[value[[4]]]]
 
 (*Clean up*)
 ipcon@Disconnect[]
