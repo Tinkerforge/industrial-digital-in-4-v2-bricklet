@@ -21,10 +21,10 @@ func main() {
 	// Get current value.
 	value, _ := idi4.GetValue()
 
-	fmt.Printf("Channel 0: \n", value[0])
-	fmt.Printf("Channel 1: \n", value[1])
-	fmt.Printf("Channel 2: \n", value[2])
-	fmt.Printf("Channel 3: \n", value[3])
+	fmt.Printf("Channel 0: %s\n", value[0])
+	fmt.Printf("Channel 1: %s\n", value[1])
+	fmt.Printf("Channel 2: %s\n", value[2])
+	fmt.Printf("Channel 3: %s\n", value[3])
 
 	fmt.Print("Press enter to exit.")
 	fmt.Scanln()

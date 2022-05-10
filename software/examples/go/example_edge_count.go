@@ -28,7 +28,7 @@ func main() {
 
 		// Get current edge count.
 		count, _ := idi4.GetEdgeCount(3, false)
-		fmt.Printf("Count: \n", count)
+		fmt.Printf("Count: %d\n", count)
 	}
 
 	fmt.Print("Press enter to exit.")
